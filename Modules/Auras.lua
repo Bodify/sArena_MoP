@@ -109,6 +109,7 @@ sArenaMixin.auraList = {
     [9484]  = 9,  -- Shackle Undead
     [1090]  = 9,  -- Sleep
     [10326] = 9,  -- Turn Evil
+    [1450679] = 9, -- Turn Evil
     [19386] = 9,  -- Wyvern Sting
     [88625] = 9,  -- Chastise
     [710]   = 9,  -- Banish

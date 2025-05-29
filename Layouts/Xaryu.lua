@@ -139,9 +139,6 @@ local function setupOptionsTable(self)
     }
 end
 
-local hpUnderlay
-local ppUnderlay
-
 function layout:Initialize(frame)
     self.db = frame.parent.db.profile.layoutSettings[layoutName]
 
@@ -190,19 +187,23 @@ function layout:Initialize(frame)
     frame.PowerText:SetPoint("CENTER", frame.PowerBar)
     frame.PowerText:SetShadowOffset(0, 0)
 
-    hpUnderlay = frame.TexturePool:Acquire()
-    hpUnderlay:SetDrawLayer("BACKGROUND", 1)
-    hpUnderlay:SetPoint("TOPLEFT", frame.HealthBar, "TOPLEFT")
-    hpUnderlay:SetPoint("BOTTOMRIGHT", frame.HealthBar, "BOTTOMRIGHT")
-    hpUnderlay:SetVertexColor(0.15, 0.15, 0.15, 0.9)
-    hpUnderlay:Show()
+    -- Health bar underlay
+    if not frame.hpUnderlay then
+        frame.hpUnderlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+        frame.hpUnderlay:SetPoint("TOPLEFT", frame.HealthBar, "TOPLEFT")
+        frame.hpUnderlay:SetPoint("BOTTOMRIGHT", frame.HealthBar, "BOTTOMRIGHT")
+        frame.hpUnderlay:SetColorTexture(0, 0, 0, 0.65)
+        frame.hpUnderlay:Show()
+    end
 
-    ppUnderlay = frame.TexturePool:Acquire()
-    ppUnderlay:SetDrawLayer("BACKGROUND", 1)
-    ppUnderlay:SetPoint("TOPLEFT", frame.PowerBar, "TOPLEFT")
-    ppUnderlay:SetPoint("BOTTOMRIGHT", frame.PowerBar, "BOTTOMRIGHT")
-    ppUnderlay:SetVertexColor(0.15, 0.15, 0.15, 0.9)
-    ppUnderlay:Show()
+    -- Power bar underlay
+    if not frame.ppUnderlay then
+        frame.ppUnderlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
+        frame.ppUnderlay:SetPoint("TOPLEFT", frame.PowerBar, "TOPLEFT")
+        frame.ppUnderlay:SetPoint("BOTTOMRIGHT", frame.PowerBar, "BOTTOMRIGHT")
+        frame.ppUnderlay:SetColorTexture(0, 0, 0, 0.65)
+        frame.ppUnderlay:Show()
+    end
 
     self:UpdateTextures(frame)
 end
@@ -247,14 +248,6 @@ function layout:UpdateTextures(frame)
     frame.CastBar:SetStatusBarTexture(texture)
     frame.HealthBar:SetStatusBarTexture(texture)
     frame.PowerBar:SetStatusBarTexture(texture)
-
-    if self.db.classicBars then
-        hpUnderlay:SetColorTexture(0, 0, 0, 0.5)
-        ppUnderlay:SetColorTexture(0, 0, 0, 0.5)
-    else
-        hpUnderlay:SetTexture(texture)
-        ppUnderlay:SetTexture(texture)
-    end
 end
 
 

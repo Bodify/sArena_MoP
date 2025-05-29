@@ -225,7 +225,7 @@ function layout:Initialize(frame)
         frame.hpUnderlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
         frame.hpUnderlay:SetPoint("TOPLEFT", frame.HealthBar, "TOPLEFT")
         frame.hpUnderlay:SetPoint("BOTTOMRIGHT", frame.HealthBar, "BOTTOMRIGHT")
-        frame.hpUnderlay:SetColorTexture(0.15, 0.15, 0.15, 0.9)
+        frame.hpUnderlay:SetColorTexture(0, 0, 0, 0.65)
         frame.hpUnderlay:Show()
     end
 
@@ -234,10 +234,9 @@ function layout:Initialize(frame)
         frame.ppUnderlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
         frame.ppUnderlay:SetPoint("TOPLEFT", frame.PowerBar, "TOPLEFT")
         frame.ppUnderlay:SetPoint("BOTTOMRIGHT", frame.PowerBar, "BOTTOMRIGHT")
-        frame.ppUnderlay:SetColorTexture(0.15, 0.15, 0.15, 0.9)
+        frame.ppUnderlay:SetColorTexture(0, 0, 0, 0.65)
         frame.ppUnderlay:Show()
     end
-
 
     self:UpdateTextures(frame)
 end

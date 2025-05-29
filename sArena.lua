@@ -386,10 +386,10 @@ function sArenaFrameMixin:OnEvent(event, eventUnit, arg1, arg2)
             -- arg1 == spellID
             if (arg1 ~= self.Trinket.spellID) then
                 if arg1 ~= 0 then
-                    local _, spellTextureNoOverride = C_Spell.GetSpellTexture(arg1)
+                    --local _, spellTextureNoOverride = C_Spell.GetSpellTexture(arg1)
                     self.Trinket.spellID = arg1
                     --self.Trinket.Texture:SetTexture(spellTextureNoOverride)
-                    self:UpdateTrinketEquippedStatus(true)
+                    self:UpdateTrinketEquippedStatus()
                 else
                     self:UpdateTrinketEquippedStatus()
                 end
@@ -761,18 +761,18 @@ function sArenaMixin:Test()
     local testData = {
         {
             class = "HUNTER",
-            specIcon = 132222,
-            castName = "Aimed Shot",
-            castIcon = 135130,
+            specIcon = 461112,
+            castName = "Cobra Shot",
+            castIcon = 461114,
             racial = 136225,
-            specName = "Marksmanship",
+            specName = "Beast Mastery",
             name = "Despytimes",
         },
         {
             class = "SHAMAN",
             specIcon = 136048,
-            castName = "Chain Lightning",
-            castIcon = 136015,
+            castName = "Feet Up",
+            castIcon = 133029,
             racial = 135923,
             specName = "Elemental",
             name = "Whaazzlasso",
@@ -784,7 +784,7 @@ function sArenaMixin:Test()
             castIcon = 136085,
             racial = 132089,
             specName = "Restoration",
-            name = "Watchmepojke",
+            name = "Minpojke",
         },
         {
             class = "WARLOCK",
@@ -810,13 +810,17 @@ function sArenaMixin:Test()
         local frame = self["arena" .. i]
         local data = testData[i]
 
-        if not data then break end
-
         frame:Show()
         frame:SetAlpha(1)
 
         frame.HealthBar:SetMinMaxValues(0, 100)
         frame.HealthBar:SetValue(100)
+
+        if i == 4 then
+            frame.HealthBar:SetValue(60)
+        elseif i == 5 then
+            frame.HealthBar:SetValue(25)
+        end
 
         frame.PowerBar:SetMinMaxValues(0, 100)
         frame.PowerBar:SetValue(100)

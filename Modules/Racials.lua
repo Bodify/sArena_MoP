@@ -80,6 +80,7 @@ function sArenaFrameMixin:FindRacial(event, spellID)
 
 		if (sharedCD and remainingCD < sharedCD) then
 			self.Trinket.Cooldown:SetCooldown(currTime, sharedCD)
+            self.Trinket.Texture:SetDesaturated(true)
 		end
 	elseif ((spellID == 42292) and self.Racial.Texture:GetTexture()) then
 		local remainingCD = GetRemainingCD(self.Racial.Cooldown)
@@ -101,7 +102,7 @@ function sArenaFrameMixin:UpdateRacial()
 
 		-- Detecting human & using placeholder trinket
 		if self.race == "Human" then
-            self:UpdateTrinketEquippedStatus()
+            self.Trinket.Texture:SetDesaturated(true)
 		end
 	end
 end
