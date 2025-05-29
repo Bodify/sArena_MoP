@@ -37,7 +37,9 @@ function sArenaFrameMixin:UpdateTrinket(arg1, arg2)
             trinket.Texture:SetDesaturated(true)
         else
             trinket.Cooldown:Clear()
-            trinket.Texture:SetDesaturated(false)
+            if not self.race == "Human" then
+                trinket.Texture:SetDesaturated(false)
+            end
         end
     else
         self:UpdateTrinketEquippedStatus()
@@ -48,5 +50,7 @@ function sArenaFrameMixin:ResetTrinket()
     self.Trinket.spellID = nil
     self.Trinket.Texture:SetTexture(nil)
     self.Trinket.Cooldown:Clear()
-    self.Trinket.Texture:SetDesaturated(false)
+    if not self.race == "Human" then
+        self.Trinket.Texture:SetDesaturated(false)
+    end
 end

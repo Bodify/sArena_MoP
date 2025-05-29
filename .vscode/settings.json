@@ -49,5 +49,8 @@
         "CompactUnitFrame_UtilSetBuff",
         "Settings",
         "ReloadUI"
+    ],
+    "Lua.diagnostics.disable": [
+        "assign-type-mismatch"
     ]
 }
