@@ -48,7 +48,7 @@ local racialData = {
 	["BloodElf"] = { texture = GetSpellTexture(28730) },
 	["Troll"] = { texture = GetSpellTexture(26296) },
 	["Draenei"] = { texture = GetSpellTexture(28880) },
-	["NightElf"] = { texture = GetSpellTexture(20580) },
+	["NightElf"] = { texture = GetSpellTexture(58984) },
 	["Goblin"] = { texture = GetSpellTexture(69041) },
 	["Worgen"] = { texture = GetSpellTexture(68992) },
     ["Pandaren"] = { texture = GetSpellTexture(107079) },
@@ -100,10 +100,6 @@ function sArenaFrameMixin:UpdateRacial()
 			self.Racial.Texture:SetTexture(racialData[self.race].texture)
 		end
 
-		-- Detecting human & using placeholder trinket
-		if self.race == "Human" then
-            self.Trinket.Texture:SetDesaturated(true)
-		end
 	end
 end
 

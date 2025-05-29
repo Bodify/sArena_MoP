@@ -187,6 +187,9 @@ function layout:Initialize(frame)
     frame.Name:SetTextColor(1,1,1)
     frame.SpecNameText:SetTextColor(1,1,1)
 
+    frame.Trinket.Cooldown:SetSwipeTexture(1)
+    frame.Trinket.Cooldown:SetSwipeColor(0, 0, 0, 0.6)
+
 
     frame.PowerBar:SetHeight(self.db.powerBarHeight)
 

@@ -8,7 +8,7 @@ function sArenaFrameMixin:FindTrinket(event, spellID)
     end
 end
 
-function sArenaFrameMixin:UpdateTrinketEquippedStatus()
+function sArenaFrameMixin:UpdateTrinketIcon()
     local unit = self.unit
     local faction, _ = UnitFactionGroup(unit)
 
@@ -30,19 +30,17 @@ function sArenaFrameMixin:UpdateTrinket(arg1, arg2)
             local _, spellTextureNoOverride = C_Spell.GetSpellTexture(spellID)
             trinket.spellID = spellID
             --trinket.Texture:SetTexture(spellTextureNoOverride)
-            self:UpdateTrinketEquippedStatus()
+            self:UpdateTrinketIcon()
         end
         if (startTime ~= 0 and duration ~= 0 and trinket.Texture:GetTexture()) then
             trinket.Cooldown:SetCooldown(startTime / 1000.0, duration / 1000.0)
             trinket.Texture:SetDesaturated(true)
         else
             trinket.Cooldown:Clear()
-            if not self.race == "Human" then
-                trinket.Texture:SetDesaturated(false)
-            end
+            trinket.Texture:SetDesaturated(false)
         end
     else
-        self:UpdateTrinketEquippedStatus()
+        self:UpdateTrinketIcon()
     end
 end
 
@@ -50,7 +48,5 @@ function sArenaFrameMixin:ResetTrinket()
     self.Trinket.spellID = nil
     self.Trinket.Texture:SetTexture(nil)
     self.Trinket.Cooldown:Clear()
-    if not self.race == "Human" then
-        self.Trinket.Texture:SetDesaturated(false)
-    end
+    self.Trinket.Texture:SetDesaturated(false)
 end

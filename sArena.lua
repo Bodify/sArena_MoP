@@ -389,9 +389,9 @@ function sArenaFrameMixin:OnEvent(event, eventUnit, arg1, arg2)
                     --local _, spellTextureNoOverride = C_Spell.GetSpellTexture(arg1)
                     self.Trinket.spellID = arg1
                     --self.Trinket.Texture:SetTexture(spellTextureNoOverride)
-                    self:UpdateTrinketEquippedStatus()
+                    self:UpdateTrinketIcon()
                 else
-                    self:UpdateTrinketEquippedStatus()
+                    self:UpdateTrinketIcon()
                 end
             end
         elseif (event == "UNIT_AURA") then
@@ -569,6 +569,7 @@ function sArenaFrameMixin:GetClass()
                 self.classLocal = classLocal
                 self.specName = specName
                 self.SpecNameText:SetText(specName)
+                self.SpecNameText:SetShown(db.profile.layoutSettings[db.profile.currentLayout].showSpecManaText)
                 self.specTexture = specTexture
                 self.class = class
                 self:UpdateSpecIcon()
