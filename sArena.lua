@@ -225,6 +225,14 @@ function sArenaMixin:ApplyPrototypeFont(frame)
     updateFont(frame.CastBar and frame.CastBar.Text, nil, "THINOUTLINE")
 end
 
+local function OnEndCooldown(frame)
+    if not frame.Trinket.Cooldown.onEndSaturate then
+        frame.Trinket.Cooldown:HookScript("OnCooldownDone", function()
+            frame.Trinket.Texture:SetDesaturated(false)
+        end)
+        frame.Trinket.Cooldown.onEndSaturate = true
+    end
+end
 
 
 function sArenaMixin:SetLayout(_, layout)
@@ -251,6 +259,7 @@ function sArenaMixin:SetLayout(_, layout)
         self.layouts[layout]:Initialize(frame)
         frame:UpdatePlayer()
         sArenaMixin:ApplyPrototypeFont(frame)
+        OnEndCooldown(frame)
     end
 
     self.optionsTable.args.layoutSettingsGroup.args = self.layouts[layout].optionsTable and
