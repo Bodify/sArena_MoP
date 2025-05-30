@@ -225,6 +225,7 @@ drList = {
     [22703]  = "Stun", -- Inferno Effect
     [132168] = "Stun", -- Shockwave
     [107570] = "Stun", -- Storm Bolt
+    [132169] = "Stun", -- Storm Bolt
 
 	[16922] = "RandomStun", 	-- Celestial Focus (Starfire Stun)
 	[28445] = "RandomStun", 	-- Improved Concussive Shot

@@ -1,15 +1,18 @@
 sArenaMixin.interruptList = {
 	[1766] = 5, 	-- Kick (Rogue)
-	[2139] = 8, 	-- Counterspell (Mage)
+	[2139] = 6, 	-- Counterspell (Mage)
 	[6552] = 4, 	-- Pummel (Warrior)
-	[33871] = 8, 	-- Shield Bash (Warrior)
-	[24259] = 3, 	-- Spell Lock (Warlock)
+	[33871] = 6, 	-- Shield Bash (Warrior)
+	[24259] = 6, 	-- Spell Lock (Warlock)
 	[43523] = 5,	-- Unstable Affliction (Warlock)
 	[16979] = 4, 	-- Feral Charge (Druid)
 	[26679] = 6, 	-- Deadly Throw (Rogue)
-	[57994] = 2, 	-- Wind Shear (Shaman)
-    [116705] = 3,   -- Spear Hand Strike (Monk)
-};
+	[57994] = 3, 	-- Wind Shear (Shaman)
+    [116705] = 4,   -- Spear Hand Strike (Monk)
+
+    [78675] = 6, -- Solar Beam
+    [113286] = 6, -- Solar Beam (Symbiosis)
+}
 
 sArenaMixin.auraList = {
     -- Special
@@ -68,6 +71,7 @@ sArenaMixin.auraList = {
     [89766]  = 9, -- Axe Toss (Felguard)
     [22703]  = 9, -- Inferno Effect
     [107570] = 9, -- Storm Bolt
+    [132169] = 9, -- Storm Bolt
     [113004] = 9, -- Intimidating Roar (Symbiosis)
     [113056] = 9, -- Intimidating Roar (Symbiosis 2)
     [118699] = 9, -- Fear (alt ID)
@@ -236,6 +240,7 @@ sArenaMixin.auraList = {
     [63685]  = 4, -- Freeze (Frost Shock)
     [107566] = 4, -- Staggering Shout
     [115757] = 4, -- Frost nova
+    [105771] = 4, -- Warbringer
 
 
     -- Root Proc
@@ -358,7 +363,7 @@ function sArenaFrameMixin:FindAura()
         currentDuration = self.currentInterruptDuration
         currentExpirationTime = self.currentInterruptExpirationTime
         currentTexture = self.currentInterruptTexture
-        currentPriority = auraList[currentSpellID] or 0
+        currentPriority = 5.9 -- Below Silence, need to clean list
         currentRemaining = currentExpirationTime - GetTime()
     end
 
