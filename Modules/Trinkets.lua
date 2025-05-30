@@ -20,14 +20,14 @@ function sArenaFrameMixin:UpdateTrinketIcon()
 end
 
 function sArenaFrameMixin:UpdateTrinket(arg1, arg2)
-    local spellID, startTime, duration = C_PvP.GetArenaCrowdControlInfo(self.unit)
+    local spellID, itemID, startTime, duration = C_PvP.GetArenaCrowdControlInfo(self.unit)
     local trinket = self.Trinket
     --if DLAPI then DLAPI.DebugLog("UpdateTrinket", "UpdateTrinket spellID: " .. spellID .. " startTime: " .. startTime .. " duration: " .. duration) end
 
     if (spellID) then
         --local spellInfo = C_Spell.GetSpellInfo(spellID)
         if (spellID ~= trinket.spellID) then
-            local _, spellTextureNoOverride = C_Spell.GetSpellTexture(spellID)
+            --local _, spellTextureNoOverride = C_Spell.GetSpellTexture(spellID)
             trinket.spellID = spellID
             --trinket.Texture:SetTexture(spellTextureNoOverride)
             self:UpdateTrinketIcon()

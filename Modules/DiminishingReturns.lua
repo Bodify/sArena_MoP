@@ -281,6 +281,7 @@ drList = {
     [114404] = "Root", -- Void Tendrils
     [115197] = "Root", -- Partial Paralysis
     [107566] = "Root", -- Staggering Shout
+    [113770] = "Root", -- Entangling Roots
 
 	[12494] = "RandomRoot", -- Frostbite
 	[55080] = "RandomRoot", -- Shattered Barrier

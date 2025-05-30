@@ -1,5 +1,6 @@
 sArenaMixin = {}
 sArenaFrameMixin = {}
+sArenaCastingBarExtensionMixin = {}
 
 sArenaMixin.layouts = {}
 sArenaMixin.defaultSettings = {
@@ -103,6 +104,8 @@ end
 function sArenaMixin:OnEvent(event)
     if (event == "PLAYER_LOGIN") then
         self:Initialize()
+        self:SetupCastColor()
+        self:SetupGrayTrinket()
         if sArena_MoPDB.reOpenOptions then
             sArena_MoPDB.reOpenOptions = nil
             C_Timer.After(0.5, function()
@@ -225,15 +228,27 @@ function sArenaMixin:ApplyPrototypeFont(frame)
     updateFont(frame.CastBar and frame.CastBar.Text, nil, "THINOUTLINE")
 end
 
-local function OnEndCooldown(frame)
-    if not frame.Trinket.Cooldown.onEndSaturate then
-        frame.Trinket.Cooldown:HookScript("OnCooldownDone", function()
-            frame.Trinket.Texture:SetDesaturated(false)
+function sArenaMixin:SetupCastColor()
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        local castBar = frame.CastBar
+        castBar:HookScript("OnEvent", function(self)
+            if self.BorderShield:IsShown() then
+                self:SetStatusBarColor(0.7, 0.7, 0.7, 1)
+            end
         end)
-        frame.Trinket.Cooldown.onEndSaturate = true
     end
 end
 
+function sArenaMixin:SetupGrayTrinket()
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        local cooldown = frame.Trinket.Cooldown
+        cooldown:HookScript("OnCooldownDone", function()
+            frame.Trinket.Texture:SetDesaturated(false)
+        end)
+    end
+end
 
 function sArenaMixin:SetLayout(_, layout)
     if (InCombatLockdown()) then return end
@@ -259,7 +274,6 @@ function sArenaMixin:SetLayout(_, layout)
         self.layouts[layout]:Initialize(frame)
         frame:UpdatePlayer()
         sArenaMixin:ApplyPrototypeFont(frame)
-        OnEndCooldown(frame)
     end
 
     self.optionsTable.args.layoutSettingsGroup.args = self.layouts[layout].optionsTable and

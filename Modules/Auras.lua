@@ -192,6 +192,9 @@ sArenaMixin.auraList = {
     [231665] = 6, -- Avenger's Shield (Paladin)
     [351338] = 6, -- Quell (Evoker)
     [97547]  = 6, -- Solar Beam
+    [113286] = 6, -- Solar Beam
+    [78675] = 6, -- Solar Beam
+    [81261] = 6, -- Solar Beam
 
     [132158] = 5.5, -- Natures Swiftness
     [378081] = 5.5, -- Natures Swiftness
@@ -219,6 +222,7 @@ sArenaMixin.auraList = {
     [19306]  = 4, -- Counterattack
     [96294]  = 4, -- Chains of Ice (Chilblains)
     [113275] = 4, -- Entangling Roots (Symbiosis)
+    [113770] = 4, -- Entangling Roots (?)
     [102359] = 4, -- Mass Entanglement
     [128405] = 4, -- Narrow Escape
     [90327]  = 4, -- Lock Jaw (Dog)
