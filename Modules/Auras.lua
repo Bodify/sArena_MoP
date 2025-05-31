@@ -17,6 +17,8 @@ sArenaMixin.interruptList = {
 sArenaMixin.auraList = {
     -- Special
     [122465] = 10, -- Dematerialize
+    [114028] = 10, -- Mass Spell Reflection
+    [23920]  = 10, -- Spell Reflection
 
     -- Full CC (Stuns and Disorients)
     [33786] = 9,  -- Cyclone (Disorient)
@@ -79,6 +81,16 @@ sArenaMixin.auraList = {
     [115268] = 9, -- Mesmerize (Shivarra)
     [104045] = 9, -- Sleep (Metamorphosis)
     [20511]  = 9, -- Intimidating Shout (secondary)
+    [96201] = 9, -- Web Wrap
+    [132168] = 9, -- Shockwave
+    [118895] = 9, -- Dragon Roar
+    [115001] = 9, -- Remorseless Winter
+    [122057] = 9, -- Clash
+    [102795] = 9, -- Bear Hug
+    [77505] = 9, -- Earthquake
+    [15618] = 9, -- Snap Kick
+    [113953] = 9, -- Paralysis
+    [137143] = 9, -- Blood Horror
 
     -- Stun Procs
     [34510] = 9,  -- Stun (various procs)
@@ -90,6 +102,7 @@ sArenaMixin.auraList = {
     [2094]  = 9,  -- Blind
     [31661] = 9,  -- Dragon's Breath
     [5782]  = 9,  -- Fear
+    [130616] = 9, -- Fear (Glyphed)
     [3355]  = 9,  -- Freezing Trap
     [1776]  = 9,  -- Gouge
     [51514] = 9,  -- Hex
@@ -114,11 +127,14 @@ sArenaMixin.auraList = {
     [1090]  = 9,  -- Sleep
     [10326] = 9,  -- Turn Evil
     [1450679] = 9, -- Turn Evil
+    [145067] = 9, -- Turn Evil
     [19386] = 9,  -- Wyvern Sting
     [88625] = 9,  -- Chastise
     [710]   = 9,  -- Banish
     [105421] = 9, -- Blinding Light
     [113506] = 9, -- Cyclone (Symbiosis)
+    [126355] = 9, -- Paralyzing Quill
+    [126246] = 9, -- Lullaby
 
     -- Immunities
     [46924]  = 7, -- Bladestorm
@@ -142,7 +158,6 @@ sArenaMixin.auraList = {
 
     -- Anti-CCs
     [48707]  = 7, -- Anti-Magic Shell
-    [23920]  = 7, -- Spell Reflection
     [137562] = 7, -- Nimble Brew
     [8178]   = 7, -- Grounding Totem Effect
     [6940]   = 7, -- Hand of Sacrifice
@@ -169,6 +184,8 @@ sArenaMixin.auraList = {
     [28730]  = 6, -- Arcane Torrent (Mana)
     [69179]  = 6, -- Arcane Torrent (Rage)
     [80483]  = 6, -- Arcane Torrent (Focus)
+    [31935] = 5, -- Avenger's Shield
+    [116709] = 5, -- Spear Hand Strike
 
     [1766]   = 6, -- Kick (Rogue)
     [2139]   = 6, -- Counterspell (Mage)
@@ -242,6 +259,10 @@ sArenaMixin.auraList = {
     [107566] = 4, -- Staggering Shout
     [115757] = 4, -- Frost nova
     [105771] = 4, -- Warbringer
+    [53148] = 4, -- Charge
+    [136634] = 4, -- Narrow Escape
+    --[127797] = 4, -- Ursol's Vortex
+    [81210] = 4, -- Net
 
 
     -- Root Proc

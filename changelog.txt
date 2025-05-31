@@ -1,3 +1,9 @@
+1.1.1
+- Add some missing auras
+
+1.1.0
+- Remove Decounce put as stun from old cata spell id
+
 1.0.9
 - Add more missing auras
 - Fix interrupt durations and added Solar Beam
