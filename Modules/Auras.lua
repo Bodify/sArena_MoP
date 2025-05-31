@@ -148,11 +148,6 @@ sArenaMixin.auraList = {
     [6940]   = 7, -- Hand of Sacrifice
     [5384]   = 7, -- Feign Death
     [34471]  = 7, -- The Beast Within
-    [110575] = 7, -- Icebound Fortitude (Druid)
-
-    [116849] = 6.5, -- life cocoon
-    [122783] = 6.5, --diffuse magic
-    [122470] = 6.5, -- touch of karma
 
     -- Silences
     [25046] = 6, -- Arcane Torrent
@@ -174,7 +169,6 @@ sArenaMixin.auraList = {
     [28730]  = 6, -- Arcane Torrent (Mana)
     [69179]  = 6, -- Arcane Torrent (Rage)
     [80483]  = 6, -- Arcane Torrent (Focus)
-
 
     [1766]   = 6, -- Kick (Rogue)
     [2139]   = 6, -- Counterspell (Mage)
@@ -199,6 +193,12 @@ sArenaMixin.auraList = {
     [113286] = 6, -- Solar Beam
     [78675] = 6, -- Solar Beam
     [81261] = 6, -- Solar Beam
+
+    [110575] = 5.6, -- Icebound Fortitude (Druid)
+    [48792]  = 5.6, -- Icebound Fortitude
+    [122783] = 5.6, -- Diffuse Magic
+    [116849] = 5.6, -- life Cocoon
+    [122470] = 5.6, -- Touch of Karma
 
     [132158] = 5.5, -- Natures Swiftness
     [378081] = 5.5, -- Natures Swiftness
@@ -299,7 +299,6 @@ sArenaMixin.auraList = {
     [1044]   = 1, -- Hand of Freedom
     [22812]  = 1, -- Barkskin
     [16188]  = 1, -- Nature's Swiftness
-    [48792]  = 1, -- Icebound Fortitude
     [50461]  = 1, -- Anti-Magic Zone
     [47484]  = 1, -- Huddle
 
