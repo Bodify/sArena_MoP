@@ -239,7 +239,6 @@ function sArenaMixin:SetupCastColor()
         end)
         castBar.BorderShield:ClearAllPoints()
         castBar.BorderShield:SetPoint("CENTER", castBar.Icon, "CENTER", 8, -1)
-        print(castBar.BorderShield:GetPoint())
     end
 end
 
