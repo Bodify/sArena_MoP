@@ -302,6 +302,8 @@ sArenaMixin.auraList = {
     [50461]  = 1, -- Anti-Magic Zone
     [47484]  = 1, -- Huddle
 
+    [76577] = 0.6, -- Smoke Bomb
+
     [5487] = 0.5, -- Bear Form
     [783] = 0.5, -- Travel Form
     [768] = 0.5, -- Cat Form
