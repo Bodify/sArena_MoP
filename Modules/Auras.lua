@@ -200,8 +200,9 @@ sArenaMixin.auraList = {
     [116849] = 5.6, -- life Cocoon
     [122470] = 5.6, -- Touch of Karma
 
-    [132158] = 5.5, -- Natures Swiftness
-    [378081] = 5.5, -- Natures Swiftness
+    [132158] = 5.5, -- Natures's Swiftness
+    [378081] = 5.5, -- Natures's Swiftness
+    [16188]  = 5.5, -- Nature's Swiftness
 
     -- Disarms
     [676]    = 5, -- Disarm
@@ -298,7 +299,6 @@ sArenaMixin.auraList = {
     [31821]  = 1, -- Aura Mastery
     [1044]   = 1, -- Hand of Freedom
     [22812]  = 1, -- Barkskin
-    [16188]  = 1, -- Nature's Swiftness
     [50461]  = 1, -- Anti-Magic Zone
     [47484]  = 1, -- Huddle
 
