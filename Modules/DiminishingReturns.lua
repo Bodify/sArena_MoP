@@ -355,4 +355,28 @@ drList = {
     [123393] = "Disorient", -- Glyph of Breath of Fire
     [88625]  = "Disorient", -- Holy Word: Chastise
 
+
+    -- Bonus cata ones
+    -- *** Controlled Stun Effects ***
+    [93433] = "Stun", -- Burrow Attack (Worm)
+    [83046] = "Stun", -- Improved Polymorph (Rank 1)
+    [83047] = "Stun", -- Improved Polymorph (Rank 2)
+    --[88625] = "Stun", -- Holy Word: Chastise
+    [93986] = "Stun", -- Aura of Foreboding
+    [54786] = "Stun", -- Demon Leap
+    -- *** Non-controlled Stun Effects ***
+    [85387] = "RandomStun", -- Aftermath
+
+    -- *** Controlled Root Effects ***
+    [96293] = "Root", -- Chains of Ice (Chilblains Rank 1)
+    [87193] = "Root", -- Paralysis
+    [55536] = "Root", -- Frostweave Net (Item)
+
+    -- *** Non-controlled Root Effects ***
+    [83301] = "RandomRoot", -- Improved Cone of Cold (Rank 1)
+    [83302] = "RandomRoot", -- Improved Cone of Cold (Rank 2)
+    [83073] = "RandomRoot", -- Shattered Barrier (Rank 2)
+
+    [50479] = "Silence", -- Nether Shock (Nether Ray)
+    [86759] = "Silence", -- Silenced - Improved Kick (Rank 2)
 }

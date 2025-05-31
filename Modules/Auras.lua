@@ -324,6 +324,41 @@ sArenaMixin.auraList = {
     [2457]   = 0, -- Battle Stance
     [2458]   = 0, -- Berserker Stance
     [71]     = 0, -- Defensive Stance
+
+
+
+    -- ##########################
+    -- Cata Bonus Ones, mop above
+    -- ##########################
+    -- *** Controlled Stun Effects ***
+    [93433] = 9, -- Burrow Attack (Worm)
+    [83046] = 9, -- Improved Polymorph (Rank 1)
+    [83047] = 9, -- Improved Polymorph (Rank 2)
+    [2812]  = 9, -- Holy Wrath
+    --[88625] = "Stunned", -- Holy Word: Chastise
+    [93986] = 9, -- Aura of Foreboding
+    [54786] = 9, -- Demon Leap
+
+    -- *** Non-controlled Stun Effects ***
+    [85387] = 9, -- Aftermath
+    [15283] = 9, -- Stunning Blow (Weapon Proc)
+    [56]    = 9, -- Stun (Weapon Proc)
+
+    -- *** Fear Effects ***
+    [5134]  = 9, -- Flash Bomb Fear (Item)
+
+    -- *** Controlled Root Effects ***
+    [96293] = 4, -- Chains of Ice (Chilblains Rank 1)
+    [87193] = 4, -- Paralysis
+
+    -- *** Non-controlled Root Effects ***
+    [47168] = 4, -- Improved Wing Clip
+    [83301] = 4, -- Improved Cone of Cold (Rank 1)
+    [83302] = 4, -- Improved Cone of Cold (Rank 2)
+    [55080] = 4, -- Shattered Barrier (Rank 1)
+    [83073] = 4, -- Shattered Barrier (Rank 2)
+    [50479] = 6, -- Nether Shock (Nether Ray)
+    [86759] = 6, -- Silenced - Improved Kick (Rank 2)
 }
 
 function sArenaFrameMixin:FindInterrupt(event, spellID)
