@@ -237,6 +237,9 @@ function sArenaMixin:SetupCastColor()
                 self:SetStatusBarColor(0.7, 0.7, 0.7, 1)
             end
         end)
+        castBar.BorderShield:ClearAllPoints()
+        castBar.BorderShield:SetPoint("CENTER", castBar.Icon, "CENTER", 8, -1)
+        print(castBar.BorderShield:GetPoint())
     end
 end
 
@@ -776,63 +779,147 @@ function sArenaFrameMixin:UpdateStatusTextVisible()
     self.PowerText:SetShown(db.profile.statusText.alwaysShow)
 end
 
+local testPlayers = {
+    {
+        class = "HUNTER",
+        specIcon = 461112,
+        castName = "Cobra Shot",
+        castIcon = 461114,
+        unint = true,
+        racial = 136225,
+        specName = "Beast Mastery",
+        name = "Despytimes",
+    },
+    {
+        class = "SHAMAN",
+        specIcon = 136048,
+        castName = "Lightning Bolt",
+        castIcon = 136048,
+        racial = 135923,
+        specName = "Elemental",
+        name = "Bluecheese",
+    },
+    {
+        class = "SHAMAN",
+        specIcon = 136048,
+        castName = "Feet Up",
+        castIcon = 133029,
+        racial = 135923,
+        specName = "Elemental",
+        name = "Whaazzlasso",
+    },
+    {
+        class = "DRUID",
+        specIcon = 136041,
+        castName = "Regrowth",
+        castIcon = 136085,
+        racial = 132089,
+        specName = "Restoration",
+        name = "Metaphors",
+    },
+    {
+        class = "WARLOCK",
+        specIcon = 136145,
+        castName = "Howl of Terror",
+        castIcon = 136147,
+        racial = 135726,
+        specName = "Affliction",
+        name = "Chan",
+    },
+    {
+        class = "WARRIOR",
+        specIcon = 132355,
+        castName = "Slam",
+        castIcon = 132340,
+        racial = 132309,
+        specName = "Arms",
+        name = "Trillebartom",
+        unint = true,
+    },
+    {
+        class = "PRIEST",
+        specIcon = 135940,
+        castName = "Penance",
+        castIcon = 237545,
+        racial = 136187,
+        specName = "Discipline",
+        name = "Hydra",
+    },
+    {
+        class = "MAGE",
+        specIcon = 135932,
+        castName = "Frostbolt",
+        castIcon = 135846,
+        racial = 136129,
+        specName = "Frost",
+        name = "Raiku",
+    },
+    {
+        class = "MAGE",
+        specIcon = 135932,
+        castName = "Arcane Blast",
+        castIcon = 135735,
+        racial = 136129,
+        specName = "Arcane",
+        name = "Ziqo",
+    },
+    {
+        class = "PALADIN",
+        specIcon = 236264,
+        castName = "Feet Up",
+        castIcon = 133029,
+        racial = 136129,
+        specName = "Retribution",
+        name = "Judgewhaazz",
+    },
+    {
+        class = "DEATHKNIGHT",
+        specIcon = 135775,
+        racial = 136145,
+        specName = "Unholy",
+        name = "Darthchan",
+    },
+    {
+        class = "ROGUE",
+        specIcon = 132320,
+        racial = 132089,
+        specName = "Subtlety",
+        name = "Nahj",
+    },
+}
+
+local classPowerType = {
+    WARRIOR = "RAGE",
+    ROGUE = "ENERGY",
+    DRUID = "ENERGY",
+    PALADIN = "MANA",
+    HUNTER = "FOCUS",
+    DEATHKNIGHT = "RUNIC_POWER",
+    SHAMAN = "MANA",
+    MAGE = "MANA",
+    WARLOCK = "MANA",
+    PRIEST = "MANA",
+}
+
+
+local function Shuffle(t)
+    for i = #t, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
 function sArenaMixin:Test()
     local _, instanceType = IsInInstance()
     if (InCombatLockdown() or instanceType == "arena") then return end
 
     local currTime = GetTime()
 
-    local testData = {
-        {
-            class = "HUNTER",
-            specIcon = 461112,
-            castName = "Cobra Shot",
-            castIcon = 461114,
-            racial = 136225,
-            specName = "Beast Mastery",
-            name = "Despytimes",
-        },
-        {
-            class = "SHAMAN",
-            specIcon = 136048,
-            castName = "Feet Up",
-            castIcon = 133029,
-            racial = 135923,
-            specName = "Elemental",
-            name = "Whaazzlasso",
-        },
-        {
-            class = "DRUID",
-            specIcon = 136041,
-            castName = "Regrowth",
-            castIcon = 136085,
-            racial = 132089,
-            specName = "Restoration",
-            name = "Minpojke",
-        },
-        {
-            class = "WARLOCK",
-            specIcon = 136145,
-            castName = "Howl of Terror",
-            castIcon = 136147,
-            racial = 136090,
-            specName = "Affliction",
-            name = "Chan",
-        },
-        {
-            class = "WARRIOR",
-            specIcon = 132355,
-            castName = "Slam",
-            castIcon = 132340,
-            racial = 132309,
-            specName = "Arms",
-            name = "Trillebartom",
-        },
-    }
+    Shuffle(testPlayers)
 
     for i = 1, 5 do
         local frame = self["arena" .. i]
-        local data = testData[i]
+        local data = testPlayers[i]
 
         frame:Show()
         frame:SetAlpha(1)
@@ -886,11 +973,10 @@ function sArenaMixin:Test()
             frame.HealthBar:SetStatusBarColor(0, 1, 0, 1)
         end
 
-        if data.class == "WARRIOR" then
-            frame.PowerBar:SetStatusBarColor(170 / 255, 10 / 255, 10 / 255)
-        else
-            frame.PowerBar:SetStatusBarColor(0, 0, 1, 1)
-        end
+        local powerType = classPowerType[data.class] or "MANA"
+        local powerColor = PowerBarColor[powerType] or { r = 0, g = 0, b = 1 }
+
+        frame.PowerBar:SetStatusBarColor(powerColor.r, powerColor.g, powerColor.b)
 
         -- DR Frames
         for n = 1, 5 do
@@ -907,12 +993,24 @@ function sArenaMixin:Test()
         end
 
         -- Cast Bar
-        frame.CastBar.fadeOut = nil
-        frame.CastBar:Show()
-        frame.CastBar:SetAlpha(1)
-        frame.CastBar.Icon:SetTexture(data.castIcon)
-        frame.CastBar.Text:SetText(data.castName)
-        frame.CastBar:SetStatusBarColor(1, 0.7, 0, 1)
+        if data.castName then
+            frame.CastBar.fadeOut = nil
+            frame.CastBar:Show()
+            frame.CastBar:SetAlpha(1)
+            frame.CastBar.Icon:SetTexture(data.castIcon)
+            frame.CastBar.Text:SetText(data.castName)
+            if data.unint then
+                frame.CastBar.BorderShield:Show()
+                frame.CastBar:SetStatusBarColor(0.7, 0.7, 0.7, 1)
+            else
+                frame.CastBar.BorderShield:Hide()
+                frame.CastBar:SetStatusBarColor(1, 0.7, 0, 1)
+            end
+        else
+            frame.CastBar.fadeOut = nil
+            frame.CastBar:Hide()
+            frame.CastBar:SetAlpha(0)
+        end
 
         frame.hideStatusText = false
         frame:SetStatusText("player")

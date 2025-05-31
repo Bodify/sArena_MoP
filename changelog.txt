@@ -1,0 +1,30 @@
+1.0.9
+- Add more missing auras
+- Fix interrupt durations and added Solar Beam
+- Interrupts now have lower prio than pure silences and will show after silence ends instead.
+
+1.0.8
+- Fix Trinket API call causing Trinkets to not always be accurate.
+- Un-interruptible castbars now show as gray color
+- Add a few more missing spells.
+
+1.0.7
+- Fix trinkets not getting colored again when cd expires
+
+1.0.6
+- Fix nelf racial texture missing
+- Remove grayed out human trinket, trinkets now grayed out only when on CD.
+- Known Issue: Trinket CD not always displaying the cooldown spiral texture. Need more testing.
+
+1.0.5
+- Trinkets now show grayed out while on CD and for Humans. Might change the Human part. See how I feel about and feedback I get.
+- Added a missing Turn Evil aura ID.
+- Known Issue: Trinket CD not always displaying the cooldown spiral texture. Need more testing.
+
+1.0.4
+- Fix minor issue with spec icon
+
+1.0.3
+- Added more settings.
+- Cleaned up a few things.
+- Added a converter from old sArena to MoP Classic version.
