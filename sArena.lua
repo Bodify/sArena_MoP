@@ -890,7 +890,7 @@ function sArenaFrameMixin:UpdateClassIcon()
 
 	self.currentClassIconTexture = texture
 
-    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].cropIcons
+    local cropIcons = db and db.profile.layoutSettings[db.profile.currentLayout].cropIcons
 
 	-- Could do SetPortraitTexture() since its hooked anyway in my other addon
 	if (texture == "class") then
