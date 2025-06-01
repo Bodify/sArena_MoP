@@ -1,6 +1,7 @@
 1.1.2
 - Added Masque support.
 - Added many defensives & offensive auras. And a few missing CC ones.
+- Added Crop Icons setting.
 - Tweaked aura priority a bit (more inc probably)
 - Add new "Reverse Cooldown Sweep" in Global DR Settings.
 - Add two new settings: Show Decimals on Class Icon & DR's (Shows below 6 seconds)
