@@ -204,14 +204,11 @@
 			<Frame parentKey="Disarm" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="Fear" inherits="sArenaDRTrackerTemplate"/>
             <Frame parentKey="Disorient" inherits="sArenaDRTrackerTemplate"/>
-			<Frame parentKey="Scatter" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="Silence" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="Horror" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="MindControl" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="Cyclone" inherits="sArenaDRTrackerTemplate"/>
 			<Frame parentKey="Charge" inherits="sArenaDRTrackerTemplate"/>
-			<Frame parentKey="OpenerStun" inherits="sArenaDRTrackerTemplate"/>
-			<Frame parentKey="Counterattack" inherits="sArenaDRTrackerTemplate"/>
         </Frames>
 
         <Scripts>

@@ -27,14 +27,11 @@ local drCategories = {
     ["Disarm"] = "Disarm",
     ["Fear"] = "Fear",
     ["Disorient"] = "Disorient",
-    ["Scatter"] = "Scatter",
     ["Silence"] = "Silence",
     ["Horror"] = "Horror",
     ["MindControl"] = "MindControl",
     ["Cyclone"] = "Cyclone",
     ["Charge"] = "Charge",
-    ["OpenerStun"] = "OpenerStun",
-    ["Counterattack"] = "Counterattack",
 }
 
 local racialCategories = {
@@ -256,7 +253,7 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                             max = 5.0,
                             softMin = 0.5,
                             softMax = 3.0,
-                            step = 0.01,
+                            step = 0.001,
                             bigStep = 0.1,
                             isPercent = true,
                         },
@@ -537,6 +534,10 @@ function sArenaMixin:UpdateFrameSettings(db, info, val)
     for i = 1, 5 do
         local text = self["arena" .. i].ClassIconCooldown.Text
         text:SetFont(text.fontFile, db.classIconFontSize, "OUTLINE")
+        local sArenaText = self["arena" .. i].ClassIconCooldown.sArenaText
+        if sArenaText then
+            sArenaText:SetFont(text.fontFile, db.classIconFontSize, "OUTLINE")
+        end
     end
 
     for i = 2, 5 do
@@ -593,14 +594,11 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
         "Disarm",
         "Fear",
         "Disorient",
-        "Scatter",
         "Silence",
         "Horror",
         "MindControl",
         "Cyclone",
         "Charge",
-        "OpenerStun",
-        "Counterattack",
     }
 
     if (val) then
@@ -812,35 +810,58 @@ else
                                         name = "Use Class Colors",
                                         desc = "When disabled, health bars will be green",
                                         type = "toggle",
+                                        width = "full",
                                         get = function(info) return info.handler.db.profile.classColors end,
-                                        set = function(info, val) info.handler.db.profile.classColors = val end,
+                                        set = function(info, val)
+                                            local db = info.handler.db
+                                            db.profile.classColors = val
+
+                                            for i = 1, 5 do
+                                                local frame = info.handler["arena" .. i]
+                                                local class = frame.tempClass
+                                                local color = RAID_CLASS_COLORS[class]
+
+                                                if val and color then
+                                                    frame.HealthBar:SetStatusBarColor(color.r, color.g, color.b, 1)
+                                                else
+                                                    frame.HealthBar:SetStatusBarColor(0, 1, 0, 1)
+                                                end
+                                            end
+                                        end,
+                                    },
+                                    showDecimalsClassIcon = {
+                                        order = 2,
+                                        name = "Show Decimals on Class Icon",
+                                        desc = "Show Decimals on Class Icon when duration is below 6 seconds.\n\nOnly for non-OmniCC users.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.showDecimalsClassIcon end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.showDecimalsClassIcon = val
+                                            info.handler:SetupCustomCD()
+                                        end
                                     },
                                     showNames = {
-                                        order = 2,
+                                        order = 3,
                                         name = "Show Names",
                                         type = "toggle",
+                                        width = "full",
                                         get = function(info) return info.handler.db.profile.showNames end,
                                         set = function(info, val)
                                             info.handler.db.profile.showNames = val
                                             info.handler.db.profile.showArenaNumber = false
-                                            local names = {
-                                                "Despytimes",
-                                                "Whaazzlasso",
-                                                "Watchmepojke",
-                                                "Chan",
-                                                "Trillebartom",
-                                            }
                                             for i = 1, 5 do
                                                 local frame = info.handler["arena" .. i]
                                                 frame.Name:SetShown(val)
-                                                frame.Name:SetText(names[i])
+                                                frame.Name:SetText(frame.tempName or "name")
                                             end
                                         end,
                                     },
                                     showArenaNumber = {
-                                        order = 3,
+                                        order = 4,
                                         name = "Show Arena Number",
                                         type = "toggle",
+                                        width = "full",
                                         get = function(info) return info.handler.db.profile.showArenaNumber end,
                                         set = function(info, val)
                                             info.handler.db.profile.showArenaNumber = val
@@ -853,6 +874,40 @@ else
                                     },
                                 },
                             },
+                            masque = {
+                                order = 7,
+                                name = "Masque",
+                                type = "group",
+                                inline = true,
+                                args = {
+                                    enableMasque = {
+                                        order = 1,
+                                        name = "Enable Masque Support",
+                                        desc = "Click to enable Masque support to reskin Icon borders.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.enableMasque end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.enableMasque = val
+                                            info.handler:AddMasqueSupport()
+                                            info.handler:Test()
+                                        end
+                                    },
+                                    disableDRBorder = {
+                                        order = 2,
+                                        name = "Disable Default DR Border",
+                                        desc = "Disable the default DR Border so you can use Masque instead.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.disableDRBorder end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.disableDRBorder = val
+                                            info.handler:SetDRBorderShownStatus()
+                                            info.handler:Test()
+                                        end
+                                    },
+                                },
+                            },
                         },
                     },
                     drGroup = {
@@ -860,8 +915,59 @@ else
                         name = "Diminishing Returns",
                         type = "group",
                         args = {
-                            categories = {
+                            drOptions = {
                                 order = 1,
+                                type = "group",
+                                name = "Options",
+                                inline = true,
+                                args = {
+                                    drResetTime = {
+                                        order = 1,
+                                        name = "DR Reset Time",
+                                        desc = "Blizzard uses a dynamic timer for DR resets, typically ranging between 15 and 20 seconds.\n\nSetting this to 20 seconds is the safest option, but you can lower it slightly (e.g., 18.5) for more aggressive tracking.",
+                                        type = "range",
+                                        min = 15,
+                                        max = 20,
+                                        step = 0.1,
+                                        bigStep = 0.5,
+                                        get = function(info)
+                                            return info.handler.db.profile.drResetTime or 20
+                                        end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.drResetTime = val
+                                            info.handler:UpdateDRTimeSetting()
+                                        end,
+                                    },
+                                    invertDRCooldown = {
+                                        order = 2,
+                                        name = "Invert DR Cooldown",
+                                        desc = "Reverses the DR cooldown spiral direction.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.invertDRCooldown end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.invertDRCooldown = val
+                                            for i = 1, 5 do
+                                                info.handler["arena" .. i]:UpdateDRCooldownReverse()
+                                            end
+                                        end
+                                    },
+                                    showDecimalsDR = {
+                                        order = 3,
+                                        name = "Show Decimals on DR's",
+                                        desc = "Show Decimals on DR's when duration is below 6 seconds.\n\nOnly for non-OmniCC users.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.showDecimalsDR end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.showDecimalsDR = val
+                                            info.handler:SetupCustomCD()
+                                        end
+                                    },
+                                },
+                            },
+                            categories = {
+                                order = 2,
                                 name = "Categories",
                                 type = "multiselect",
                                 get = function(info, key) return info.handler.db.profile.drCategories[key] end,

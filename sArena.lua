@@ -9,6 +9,8 @@ sArenaMixin.defaultSettings = {
         classColors = true,
         showNames = true,
         showArenaNumber = false,
+        showDecimalsDR = true,
+        showDecimalsClassIcon = true,
         statusText = {
             usePercentage = false,
             alwaysShow = true,
@@ -18,6 +20,18 @@ sArenaMixin.defaultSettings = {
 }
 
 sArenaMixin.pFont = "Interface\\AddOns\\sArena_MoP\\Prototype.ttf"
+
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local UnitGUID = UnitGUID
+local GetTime = GetTime
+local UnitHealthMax = UnitHealthMax
+local UnitHealth = UnitHealth
+local UnitPowerMax = UnitPowerMax
+local UnitPower = UnitPower
+local UnitPowerType = UnitPowerType
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local testActive
+local masqueOn
 
 function sArenaMixin:OldConvert()
     local oldDB = sArena3DB or sArena2DB or sArenaDB
@@ -63,6 +77,20 @@ sArenaMixin.classIcons = {
     ["MONK"] = { 0.5,  0.5,  0.5,  0.75, 0.75, 0.5,  0.75, 0.75 },
 }
 
+sArenaMixin.croppedClassIcons = {
+    ["WARRIOR"]     = { 0.02, 0.02, 0.02, 0.23, 0.23, 0.02, 0.23, 0.23 },
+    ["ROGUE"]       = { 0.52, 0.02, 0.52, 0.23, 0.73, 0.02, 0.73, 0.23 },
+    ["DRUID"]       = { 0.77, 0.02, 0.77, 0.23, 0.98, 0.02, 0.98, 0.23 },
+    ["WARLOCK"]     = { 0.77, 0.27, 0.77, 0.48, 0.98, 0.27, 0.98, 0.48 },
+    ["HUNTER"]      = { 0.02, 0.27, 0.02, 0.48, 0.23, 0.27, 0.23, 0.48 },
+    ["PRIEST"]      = { 0.52, 0.27, 0.52, 0.48, 0.73, 0.27, 0.73, 0.48 },
+    ["PALADIN"]     = { 0.02, 0.52, 0.02, 0.73, 0.23, 0.52, 0.23, 0.73 },
+    ["SHAMAN"]      = { 0.27, 0.27, 0.27, 0.48, 0.48, 0.27, 0.48, 0.48 },
+    ["MAGE"]        = { 0.27, 0.02, 0.27, 0.23, 0.48, 0.02, 0.48, 0.23 },
+    ["DEATHKNIGHT"] = { 0.27, 0.52, 0.27, 0.73, 0.48, 0.52, 0.48, 0.73 },
+    ["MONK"]        = { 0.52, 0.52, 0.52, 0.73, 0.73, 0.52, 0.73, 0.73 },
+}
+
 local db
 local emptyLayoutOptionsTable = {
     notice = {
@@ -94,6 +122,40 @@ local function UpdateBlizzVisibility(instanceType)
     end
 end
 
+function sArenaMixin:HandleArenaStart()
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        if frame:IsShown() then break end
+        if UnitExists("arena"..i) then
+            frame:UpdateVisible()
+            frame:UpdatePlayer("seen")
+        end
+    end
+end
+
+local matchStartedMessages = {
+    "The Arena battle has begun!", -- English / Default
+    "¡La batalla en arena ha comenzado!", -- esES / esMX
+    "A batalha na Arena começou!", -- ptBR
+    "Der Arenakampf hat begonnen!", -- deDE
+    "Le combat d'arène commence\194\160!", -- frFR
+    "Бой начался!", -- ruRU
+    "투기장 전투가 시작되었습니다!", -- koKR
+    "竞技场战斗开始了！", -- zhCN
+    "竞技场的战斗开始了！", -- zhCN (Wotlk)
+    "競技場戰鬥開始了！", -- zhTW
+}
+
+local function IsMatchStartedMessage(msg)
+    if not msg then return false end
+    for _, phrase in ipairs(matchStartedMessages) do
+        if msg:find(phrase, 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
 
 -- Parent Frame
 function sArenaMixin:OnLoad()
@@ -101,11 +163,42 @@ function sArenaMixin:OnLoad()
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-function sArenaMixin:OnEvent(event)
-    if (event == "PLAYER_LOGIN") then
+local combatEvents = {
+    ["SPELL_CAST_SUCCESS"] = true,
+    ["SPELL_AURA_APPLIED"] = true,
+    ["SPELL_INTERRUPT"] = true,
+    ["SPELL_AURA_REMOVED"] = true,
+    ["SPELL_AURA_BROKEN"] = true,
+    ["SPELL_AURA_REFRESH"] = true,
+}
+
+function sArenaMixin:OnEvent(event, ...)
+    if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+        local _, combatEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, _, _, auraType =CombatLogGetCurrentEventInfo()
+        if not combatEvents[combatEvent] then return end
+        for i = 1, 5 do
+            local ArenaFrame = self["arena" .. i]
+
+            if (sourceGUID == UnitGUID("arena" .. i)) then
+                ArenaFrame:FindRacial(combatEvent, spellID)
+                ArenaFrame:FindTrinket(combatEvent, spellID)
+            end
+
+            if (destGUID == UnitGUID("arena" .. i)) then
+                ArenaFrame:FindInterrupt(combatEvent, spellID)
+
+                if (auraType == "DEBUFF") then
+                    ArenaFrame:FindDR(combatEvent, spellID)
+                end
+            end
+        end
+    elseif (event == "PLAYER_LOGIN") then
         self:Initialize()
         self:SetupCastColor()
         self:SetupGrayTrinket()
+        self:AddMasqueSupport()
+        self:SetupCustomCD()
+        self:SetDRBorderShownStatus()
         if sArena_MoPDB.reOpenOptions then
             sArena_MoPDB.reOpenOptions = nil
             C_Timer.After(0.5, function()
@@ -120,31 +213,17 @@ function sArenaMixin:OnEvent(event)
 
         if (instanceType == "arena") then
             self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+            self:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
         else
             self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+            self:UnregisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
         end
-    elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-        local _, combatEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, _, _, auraType =
-            CombatLogGetCurrentEventInfo()
-
-        for i = 1, 5 do
-            local ArenaFrame = self["arena" .. i]
-
-            if (sourceGUID == UnitGUID("arena" .. i)) then
-                ArenaFrame:FindRacial(combatEvent, spellID)
-            end
-
-            if (sourceGUID == UnitGUID("arena" .. i)) then
-                ArenaFrame:FindTrinket(combatEvent, spellID)
-            end
-
-            if (destGUID == UnitGUID("arena" .. i)) then
-                ArenaFrame:FindInterrupt(combatEvent, spellID)
-
-                if (auraType == "DEBUFF") then
-                    ArenaFrame:FindDR(combatEvent, spellID)
-                end
-            end
+    elseif event == "CHAT_MSG_BG_SYSTEM_NEUTRAL" then
+        local msg = ...
+        if IsMatchStartedMessage(msg) then
+            C_Timer.After(1, function()
+                self:HandleArenaStart()
+            end)
         end
     end
 end
@@ -170,6 +249,8 @@ function sArenaMixin:Initialize()
 
     self.db = LibStub("AceDB-3.0"):New("sArena_MoPDB", self.defaultSettings, true)
     db = self.db
+
+    self:UpdateDRTimeSetting()
 
     db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
     db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
@@ -242,6 +323,15 @@ function sArenaMixin:SetupCastColor()
     end
 end
 
+function sArenaFrameMixin:SetTextureCrop(texture, crop)
+    if not texture then return end
+    if crop then
+        texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    else
+        texture:SetTexCoord(0, 1, 0, 1)
+    end
+end
+
 function sArenaMixin:SetupGrayTrinket()
     for i = 1, 5 do
         local frame = self["arena" .. i]
@@ -249,6 +339,90 @@ function sArenaMixin:SetupGrayTrinket()
         cooldown:HookScript("OnCooldownDone", function()
             frame.Trinket.Texture:SetDesaturated(false)
         end)
+    end
+end
+
+
+function sArenaMixin:CreateCustomCooldown(cooldown, showDecimals)
+    local text = cooldown.sArenaText or cooldown:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
+    if not cooldown.sArenaText then
+        cooldown.sArenaText = text
+
+        local f, s, o = cooldown.Text:GetFont()
+        text:SetFont(f, s, o)
+
+        local r, g, b, a = cooldown.Text:GetShadowColor()
+        local x, y = cooldown.Text:GetShadowOffset()
+        text:SetShadowColor(r, g, b, a)
+        text:SetShadowOffset(x, y)
+
+        text:SetPoint("CENTER", cooldown, "CENTER", 0, -1)
+        text:SetJustifyH("CENTER")
+        text:SetJustifyV("MIDDLE")
+    end
+
+    cooldown:SetHideCountdownNumbers(showDecimals)
+
+    if showDecimals then
+        cooldown:SetScript("OnUpdate", function()
+            local start, duration = cooldown:GetCooldownTimes()
+            start, duration = start / 1000, duration / 1000
+            local remaining = (start + duration) - GetTime()
+
+            if remaining > 0 then
+                if remaining < 6 then
+                    text:SetFormattedText("%.1f", remaining)
+                elseif remaining < 60 then
+                    text:SetFormattedText("%d", remaining)
+                elseif remaining < 3600 then
+                    local m, s = math.floor(remaining / 60), math.floor(remaining % 60)
+                    text:SetFormattedText("%d:%02d", m, s)
+                else
+                    text:SetFormattedText("%dh", math.floor(remaining / 3600))
+                end
+            else
+                text:SetText("")
+            end
+        end)
+    else
+        cooldown:SetScript("OnUpdate", nil)
+        text:SetText(nil)
+    end
+end
+
+function sArenaMixin:SetupCustomCD()
+    if C_AddOns.IsAddOnLoaded("OmniCC") then return end
+
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+
+        -- Class icon cooldown
+        self:CreateCustomCooldown(frame.ClassIconCooldown, self.db.profile.showDecimalsClassIcon)
+
+        -- DR frames
+        for _, category in ipairs(self.drCategories) do
+            local drFrame = frame[category]
+            if drFrame and drFrame.Cooldown then
+                self:CreateCustomCooldown(drFrame.Cooldown, self.db.profile.showDecimalsDR)
+            end
+        end
+    end
+end
+
+function sArenaMixin:SetDRBorderShownStatus()
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        -- DR frames
+        for _, category in ipairs(self.drCategories) do
+            local drFrame = frame[category]
+            if drFrame then
+                if self.db.profile.disableDRBorder then
+                    drFrame.Border:Hide()
+                else
+                    drFrame.Border:Show()
+                end
+            end
+        end
     end
 end
 
@@ -400,7 +574,7 @@ function sArenaFrameMixin:OnEvent(event, eventUnit, arg1, arg2)
             if (db.profile.showArenaNumber) then
                 self.Name:SetText(unit)
             elseif (db.profile.showNames) then
-                self.Name:SetText(GetUnitName(unit))
+                self.Name:SetText(UnitName(unit))
             end
         elseif (event == "ARENA_OPPONENT_UPDATE") then
             self:UpdatePlayer(arg1)
@@ -493,18 +667,111 @@ function sArenaFrameMixin:OnLeave()
     self:UpdateStatusTextVisible()
 end
 
+local function GetNumArenaOpponentsFallback()
+    local count = 0
+    for i = 1, 5 do
+        if UnitExists("arena" .. i) then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 function sArenaFrameMixin:UpdateVisible()
-    if (InCombatLockdown()) then
+    if InCombatLockdown() then
         self:RegisterEvent("PLAYER_REGEN_ENABLED")
         return
     end
 
     local _, instanceType = IsInInstance()
+    if instanceType ~= "arena" then
+        self:Hide()
+        return
+    end
+
     local id = self:GetID()
-    if (instanceType == "arena" and (GetNumArenaOpponentSpecs() >= id or GetNumArenaOpponents() >= id)) then
+    local numSpecs = GetNumArenaOpponentSpecs()
+    local numOpponents = (numSpecs == 0) and GetNumArenaOpponentsFallback() or numSpecs
+
+    if numOpponents >= id then
         self:Show()
     else
         self:Hide()
+    end
+end
+
+
+local function addToMasque(frame, masqueGroup)
+    if frame and not frame.bbfMsq then
+        masqueGroup:AddButton(frame)
+        frame.bbfMsq = true
+        --print(frame:GetName())
+    end
+end
+
+function sArenaMixin:AddMasqueSupport()
+    if not self.db.profile.enableMasque or masqueOn or not C_AddOns.IsAddOnLoaded("Masque") then return end
+    local Masque = LibStub("Masque", true)
+    masqueOn = true
+
+    local sArenaClass = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Class")
+    local sArenaTrinket = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Trinket")
+    local sArenaRacial = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Racial")
+    local sArenaDRs = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "DRs")
+    local sArenaFrame = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Frame")
+    local sArenaCastbarIcon = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Cast Icon")
+
+    local function MsqSkinIcon(frame, group)
+        local skinWrapper = CreateFrame("Frame")
+        skinWrapper:SetParent(frame)
+        skinWrapper:SetSize(30, 30)
+        skinWrapper:SetAllPoints(frame.Icon)
+        frame.MSQ = skinWrapper
+        frame.Icon:Hide()
+        frame.SkinnedIcon = skinWrapper:CreateTexture(nil, "BACKGROUND")
+        frame.SkinnedIcon:SetSize(30, 30)
+        frame.SkinnedIcon:SetPoint("CENTER")
+        frame.SkinnedIcon:SetTexture(frame.Icon:GetTexture())
+        hooksecurefunc(frame.Icon, "SetTexture", function(_, tex)
+            skinWrapper:SetScale(frame.Icon:GetScale())
+            frame.SkinnedIcon:SetTexture(tex)
+        end)
+        group:AddButton(skinWrapper, {
+            Icon = frame.SkinnedIcon,
+        })
+    end
+
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        frame.FrameMsq = CreateFrame("Frame", nil, frame)
+        frame.FrameMsq:SetFrameStrata("DIALOG")
+        frame.FrameMsq:SetAllPoints(frame)
+        addToMasque(frame.FrameMsq, sArenaFrame)
+
+        frame.ClassIconMsq = CreateFrame("Frame", nil, frame)
+        frame.ClassIconMsq:SetFrameStrata("DIALOG")
+        frame.ClassIconMsq:SetAllPoints(frame.ClassIcon)
+
+        frame.TrinketMsq = CreateFrame("Frame", nil, frame)
+        frame.TrinketMsq:SetFrameStrata("DIALOG")
+        frame.TrinketMsq:SetAllPoints(frame.Trinket)
+
+        frame.RacialMsq = CreateFrame("Frame", nil, frame)
+        frame.RacialMsq:SetFrameStrata("DIALOG")
+        frame.RacialMsq:SetAllPoints(frame.Racial)
+
+        addToMasque(frame.ClassIconMsq, sArenaClass)
+        addToMasque(frame.TrinketMsq, sArenaTrinket)
+        addToMasque(frame.RacialMsq, sArenaRacial)
+        MsqSkinIcon(frame.CastBar, sArenaCastbarIcon)
+
+        -- DR frames
+        for _, category in ipairs(self.drCategories) do
+            local drFrame = frame[category]
+            if drFrame then
+                MsqSkinIcon(drFrame, sArenaDRs)
+            end
+        end
     end
 end
 
@@ -532,7 +799,7 @@ function sArenaFrameMixin:UpdatePlayer(unitEvent)
     self.hideStatusText = false
 
     if (db.profile.showNames) then
-        self.Name:SetText(GetUnitName(unit))
+        self.Name:SetText(UnitName(unit))
         self.Name:SetShown(true)
     elseif (db.profile.showArenaNumber) then
         self.Name:SetText(self.unit)
@@ -623,18 +890,20 @@ function sArenaFrameMixin:UpdateClassIcon()
 
 	self.currentClassIconTexture = texture
 
+    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].cropIcons
+
 	-- Could do SetPortraitTexture() since its hooked anyway in my other addon
 	if (texture == "class") then
         if db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon and self.specTexture then
             self.ClassIcon:SetTexture(self.specTexture)
-            self.ClassIcon:SetTexCoord(0, 1, 0, 1)
+            self:SetTextureCrop(self.ClassIcon, cropIcons)
         else
             self.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
-            self.ClassIcon:SetTexCoord(unpack(sArenaMixin.classIcons[self.class]))
+            self.ClassIcon:SetTexCoord(unpack(cropIcons and sArenaMixin.croppedClassIcons[self.class] or sArenaMixin.classIcons[self.class]))
         end
 		return
 	end
-	self.ClassIcon:SetTexCoord(0, 1, 0, 1)
+	self:SetTextureCrop(self.ClassIcon, cropIcons)
 	self.ClassIcon:SetTexture(texture)
 end
 
@@ -683,22 +952,27 @@ function sArenaFrameMixin:ResetLayout()
         self.NameBackground:Hide()
     end
 
+    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].cropIcons
+
     local f = self.Trinket
     f:ClearAllPoints()
     f:SetSize(0, 0)
-    f.Texture:SetTexCoord(0, 1, 0, 1)
+    self:SetTextureCrop(f.Texture, cropIcons)
+
+    f = self.ClassIcon
+    self:SetTextureCrop(f, cropIcons)
 
     f = self.Racial
     f:ClearAllPoints()
     f:SetSize(0, 0)
-    f.Texture:SetTexCoord(0, 1, 0, 1)
+    self:SetTextureCrop(f.Texture, cropIcons)
 
     f = self.SpecIcon
     f:ClearAllPoints()
     f:SetSize(0, 0)
     f:SetScale(1)
     f.Texture:RemoveMaskTexture(f.Mask)
-    f.Texture:SetTexCoord(0, 1, 0, 1)
+    self:SetTextureCrop(f.Texture, cropIcons)
 
     f = self.Name
     ResetFontString(f)
@@ -781,114 +1055,203 @@ function sArenaFrameMixin:UpdateStatusTextVisible()
     self.PowerText:SetShown(db.profile.statusText.alwaysShow)
 end
 
-local testPlayers = {
-    {
+local specTemplates = {
+    BM_HUNTER = {
         class = "HUNTER",
         specIcon = 461112,
         castName = "Cobra Shot",
         castIcon = 461114,
-        unint = true,
         racial = 136225,
         specName = "Beast Mastery",
-        name = "Despytimes",
+        unint = true,
     },
-    {
+    ELE_SHAMAN = {
         class = "SHAMAN",
         specIcon = 136048,
         castName = "Lightning Bolt",
         castIcon = 136048,
         racial = 135923,
         specName = "Elemental",
-        name = "Bluecheese",
     },
-    {
+    ENH_SHAMAN = {
         class = "SHAMAN",
-        specIcon = 136048,
-        castName = "Feet Up",
-        castIcon = 133029,
+        specIcon = 136039,
+        castName = "Stormstrike",
+        castIcon = 132314,
         racial = 135923,
-        specName = "Elemental",
-        name = "Whaazzlasso",
+        specName = "Enhancement",
     },
-    {
+    RESTO_SHAMAN = {
+        class = "SHAMAN",
+        specIcon = 136052,
+        castName = "Healing Wave",
+        castIcon = 136052,
+        racial = 135726,
+        specName = "Restoration",
+    },
+    RESTO_DRUID = {
         class = "DRUID",
         specIcon = 136041,
         castName = "Regrowth",
         castIcon = 136085,
         racial = 132089,
         specName = "Restoration",
-        name = "Metaphors",
     },
-    {
+    AFF_WARLOCK = {
         class = "WARLOCK",
         specIcon = 136145,
         castName = "Howl of Terror",
         castIcon = 136147,
         racial = 135726,
         specName = "Affliction",
-        name = "Chan",
     },
-    {
+    ARMS_WARRIOR = {
         class = "WARRIOR",
         specIcon = 132355,
         castName = "Slam",
         castIcon = 132340,
         racial = 132309,
         specName = "Arms",
-        name = "Trillebartom",
         unint = true,
     },
-    {
+    DISC_PRIEST = {
         class = "PRIEST",
         specIcon = 135940,
         castName = "Penance",
         castIcon = 237545,
         racial = 136187,
         specName = "Discipline",
-        name = "Hydra",
     },
-    {
+    HOLY_PRIEST = {
+        class = "PRIEST",
+        specIcon = 237542,
+        castName = "Holy Fire",
+        castIcon = 135972,
+        racial = 136187,
+        specName = "Holy",
+    },
+    FERAL_DRUID = {
+        class = "DRUID",
+        specIcon = 132115,
+        castName = "Cyclone",
+        castIcon = 132469,
+        racial = 132089,
+        specName = "Feral",
+    },
+    FROST_MAGE = {
         class = "MAGE",
-        specIcon = 135932,
+        specIcon = 135846,
         castName = "Frostbolt",
         castIcon = 135846,
         racial = 136129,
         specName = "Frost",
-        name = "Raiku",
     },
-    {
+    ARCANE_MAGE = {
         class = "MAGE",
         specIcon = 135932,
         castName = "Arcane Blast",
         castIcon = 135735,
         racial = 136129,
         specName = "Arcane",
-        name = "Ziqo",
     },
-    {
+    FIRE_MAGE = {
+        class = "MAGE",
+        specIcon = 135810,
+        castName = "Pyroblast",
+        castIcon = 135808,
+        racial = 135991,
+        specName = "Fire",
+    },
+    RET_PALADIN = {
         class = "PALADIN",
-        specIcon = 236264,
+        specIcon = 135873,
         castName = "Feet Up",
         castIcon = 133029,
         racial = 136129,
         specName = "Retribution",
-        name = "Judgewhaazz",
     },
-    {
+    UNHOLY_DK = {
         class = "DEATHKNIGHT",
         specIcon = 135775,
         racial = 136145,
         specName = "Unholy",
-        name = "Darthchan",
     },
-    {
+    SUB_ROGUE = {
         class = "ROGUE",
         specIcon = 132320,
         racial = 132089,
         specName = "Subtlety",
-        name = "Nahj",
     },
 }
+
+local testPlayers = {
+    { template = "BM_HUNTER", name = "Despytimes" },
+    { template = "ELE_SHAMAN", name = "Bluecheese" },
+    { template = "ENH_SHAMAN", name = "Saul" },
+    { template = "RESTO_SHAMAN", name = "Cdew" },
+    { template = "RESTO_SHAMAN", name = "Lontarito" },
+    { template = "ELE_SHAMAN", name = "Whaazzlasso", castName = "Feet Up", castIcon = 133029 },
+    { template = "RESTO_DRUID", name = "Metaphors" },
+    { template = "RESTO_DRUID", name = "Flop" },
+    { template = "FERAL_DRUID", name = "Sodapoopin" },
+    { template = "AFF_WARLOCK", name = "Chan" },
+    { template = "ARMS_WARRIOR", name = "Trillebartom" },
+    { template = "DISC_PRIEST", name = "Hydra" },
+    { template = "HOLY_PRIEST", name = "Mehhx" },
+    { template = "FROST_MAGE", name = "Raiku (46)" },
+    { template = "FROST_MAGE", name = "Samiyam" },
+    { template = "FROST_MAGE", name = "Aeghis" },
+    { template = "FROST_MAGE", name = "Venruki" },
+    { template = "FROST_MAGE", name = "Xaryu" },
+    { template = "FIRE_MAGE", name = "Hansol" },
+    { template = "ARCANE_MAGE", name = "Ziqo" },
+    { template = "RET_PALADIN", name = "Judgewhaazz" },
+    { template = "UNHOLY_DK", name = "Darthchan" },
+    { template = "UNHOLY_DK", name = "Mes" },
+    { template = "SUB_ROGUE", name = "Nahj" },
+    { template = "SUB_ROGUE", name = "Whaazz" },
+    { template = "SUB_ROGUE", name = "Pikawhoo" },
+    { template = "ARMS_WARRIOR", name = "Magnusz" },
+}
+
+local function ExpandTemplates()
+    for _, player in ipairs(testPlayers) do
+        local template = specTemplates[player.template]
+        if template then
+            for k, v in pairs(template) do
+                if player[k] == nil then
+                    player[k] = v
+                end
+            end
+            player.template = nil
+        end
+    end
+    testActive = true
+end
+
+local function Shuffle()
+    local classMap = {}
+    local uniqueClassPlayers = {}
+
+    for _, player in ipairs(testPlayers) do
+        if not classMap[player.class] then
+            classMap[player.class] = {}
+        end
+        table.insert(classMap[player.class], player)
+    end
+
+    for _, classPlayers in pairs(classMap) do
+        local randomIndex = math.random(#classPlayers)
+        table.insert(uniqueClassPlayers, classPlayers[randomIndex])
+    end
+
+    for i = #uniqueClassPlayers, 2, -1 do
+        local j = math.random(i)
+        uniqueClassPlayers[i], uniqueClassPlayers[j] = uniqueClassPlayers[j], uniqueClassPlayers[i]
+    end
+
+    return uniqueClassPlayers
+end
 
 local classPowerType = {
     WARRIOR = "RAGE",
@@ -903,25 +1266,24 @@ local classPowerType = {
     PRIEST = "MANA",
 }
 
-
-local function Shuffle(t)
-    for i = #t, 2, -1 do
-        local j = math.random(i)
-        t[i], t[j] = t[j], t[i]
-    end
-end
-
 function sArenaMixin:Test()
     local _, instanceType = IsInInstance()
     if (InCombatLockdown() or instanceType == "arena") then return end
 
     local currTime = GetTime()
-
-    Shuffle(testPlayers)
+    if not testActive then
+        ExpandTemplates()
+    end
+    local shuffledPlayers = Shuffle()
+    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
+    local replaceClassIcon = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
 
     for i = 1, 5 do
         local frame = self["arena" .. i]
-        local data = testPlayers[i]
+        local data = shuffledPlayers[i]
+
+        frame.tempName = data.name
+        frame.tempClass = data.class
 
         frame:Show()
         frame:SetAlpha(1)
@@ -939,24 +1301,24 @@ function sArenaMixin:Test()
         frame.PowerBar:SetValue(100)
 
         -- Class Icon and Spec Icon + Spec Name
-        if db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon then
+        if replaceClassIcon then
             frame.SpecIcon:Hide()
             frame.SpecIcon.Texture:SetTexture(nil)
             frame.ClassIcon:SetTexture(data.specIcon, true)
-            frame.ClassIcon:SetTexCoord(0, 1, 0, 1)
+            frame:SetTextureCrop(self.ClassIcon, cropIcons)
         else
             frame.SpecIcon:Show()
             frame.SpecIcon.Texture:SetTexture(data.specIcon)
             frame.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES", true)
-            frame.ClassIcon:SetTexCoord(unpack(self.classIcons[data.class]))
+            frame.ClassIcon:SetTexCoord(unpack(cropIcons and self.croppedClassIcons[data.class] or self.classIcons[data.class]))
         end
         frame.SpecNameText:SetText(data.specName)
         frame.SpecNameText:SetShown(db.profile.layoutSettings[db.profile.currentLayout].showSpecManaText)
 
-        frame.ClassIconCooldown:SetCooldown(currTime, math.random(20, 60))
+        frame.ClassIconCooldown:SetCooldown(currTime, math.random(60, 145))
 
         frame.Name:SetText((db.profile.showArenaNumber and "arena" .. i) or data.name)
-        frame.Name:SetShown(db.profile.showNames)
+        frame.Name:SetShown(db.profile.showNames or db.profile.showArenaNumber)
 
         -- Trinket
         frame.Trinket.Texture:SetTexture(133453)
@@ -989,8 +1351,16 @@ function sArenaMixin:Test()
 
             if (n == 1) then
                 drFrame.Border:SetVertexColor(1, 0, 0, 1)
+                if drFrame.MSQ and drFrame.MSQ.__MSQ_Normal then
+                    drFrame.MSQ.__MSQ_Normal:SetDesaturated(true)
+                    drFrame.MSQ.__MSQ_Normal:SetVertexColor(1, 0, 0, 1)
+                end
             else
                 drFrame.Border:SetVertexColor(0, 1, 0, 1)
+                if drFrame.MSQ and drFrame.MSQ.__MSQ_Normal then
+                    drFrame.MSQ.__MSQ_Normal:SetDesaturated(true)
+                    drFrame.MSQ.__MSQ_Normal:SetVertexColor(0, 1, 0, 1)
+                end
             end
         end
 

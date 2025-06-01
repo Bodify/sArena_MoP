@@ -4,7 +4,7 @@ local layout = {}
 layout.defaultSettings = {
     posX = 355,
     posY = 131,
-    scale = 1.2,
+    scale = 1.15,
     classIconFontSize = 14,
     spacing = 35,
     growthDirection = 1,
@@ -153,6 +153,13 @@ local function setupOptionsTable(self)
             classicBars = {
                 order = 4,
                 name = "Classic Bar Textures",
+                type = "toggle",
+                get = getSetting,
+                set = setSetting,
+            },
+            cropIcons = {
+                order = 5,
+                name = "Crop Icons",
                 type = "toggle",
                 get = getSetting,
                 set = setSetting,

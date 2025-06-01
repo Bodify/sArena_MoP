@@ -7,14 +7,11 @@ sArenaMixin.drCategories = {
 	"Disarm",
 	"Fear",
     "Disorient",
-	"Scatter",
 	"Silence",
 	"Horror",
 	"MindControl",
 	"Cyclone",
 	"Charge",
-	"OpenerStun",
-	"Counterattack"
 }
 
 sArenaMixin.defaultSettings.profile.drCategories = {
@@ -26,20 +23,18 @@ sArenaMixin.defaultSettings.profile.drCategories = {
 	["Disarm"] = true,
 	["Fear"] = true,
     ["Disorient"] = true,
-	["Scatter"] = true,
 	["Silence"] = true,
 	["Horror"] = true,
 	["MindControl"] = true,
 	["Cyclone"] = true,
 	["Charge"] = true,
-	["OpenerStun"] = true,
-	["Counterattack"] = true
 }
 
 local drCategories = sArenaMixin.drCategories
 local drList
 -- Blizzard has dynamic diminishing timer for reset DR's (usually 15 to 20 seconds)
 -- 20 seconds it's safe value but you can set lower
+-- YOU CAN CHANGE THIS IN GUI -> /sarena -> Global Settings -> DR -> DR Reset Time
 local drTime = 20
 local severityColor = {
 	[1] = { 0, 1, 0, 1 },
@@ -48,6 +43,10 @@ local severityColor = {
 }
 
 local GetTime = GetTime
+
+function sArenaMixin:UpdateDRTimeSetting()
+    drTime = self.db.profile.drResetTime or 20
+end
 
 function sArenaFrameMixin:FindDR(combatEvent, spellID)
 	local category = drList[spellID]
@@ -94,11 +93,27 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
 
 	frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)))
 	frame.Border:SetVertexColor(unpack(severityColor[frame.severity]))
+    if frame.MSQ and frame.MSQ.__MSQ_Normal then
+        frame.MSQ.__MSQ_Normal:SetDesaturated(true)
+        frame.MSQ.__MSQ_Normal:SetVertexColor(unpack(severityColor[frame.severity]))
+    end
 
 	frame.severity = frame.severity + 1
 	if frame.severity > 3 then
 		frame.severity = 3
 	end
+end
+
+
+function sArenaFrameMixin:UpdateDRCooldownReverse()
+    local reverse = self.parent.db.profile.invertDRCooldown
+    for i = 1, #sArenaMixin.drCategories do
+        local category = sArenaMixin.drCategories[i]
+        local frame = self[category]
+        if frame and frame.Cooldown then
+            frame.Cooldown:SetReverse(reverse)
+        end
+    end
 end
 
 function sArenaFrameMixin:UpdateDRPositions()
@@ -229,6 +244,7 @@ drList = {
     [96201] = "Stun", -- Web Wrap
     [122057] = "Stun", -- Clash
     [15618] = "Stun", -- Snap Kick
+    [9005]  = "Stun", -- Pounce
 
 	[16922] = "RandomStun", 	-- Celestial Focus (Starfire Stun)
 	[28445] = "RandomStun", 	-- Improved Concussive Shot
@@ -344,11 +360,6 @@ drList = {
 	[6789]  = "Horror",    -- Death Coil
     [137143] = "Horror", -- Blood Horror
 
-	[9005]  = "OpenerStun", -- Pounce
-
-	[31661] = "Scatter",   -- Dragon's Breath
-	[19503] = "Scatter",   -- Scatter Shot
-
 	-- Spells that DR with itself only
 	[33786] = "Cyclone",    	-- Cyclone
     [113506] = "Cyclone", -- Cyclone (Symbiosis)
@@ -356,10 +367,11 @@ drList = {
 	[13181] = "MindControl", 	-- Gnomish Mind Control Cap
     [67799] = "MindControl", -- Mind Amplification Dish (Item)
 	[7922]  = "Charge",     	-- Charge Stun
-	[19306] = "Counterattack", 	-- Counterattack
 
     -- *** Disorient Effects ***
     [99]     = "Disorient", -- Disorienting Roar
+    [19503]  = "Disorient", -- Scatter Shot
+    [31661]  = "Disorient", -- Dragon's Breath
     [123393] = "Disorient", -- Glyph of Breath of Fire
     [88625]  = "Disorient", -- Holy Word: Chastise
 

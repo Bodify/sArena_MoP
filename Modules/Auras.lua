@@ -19,6 +19,7 @@ sArenaMixin.auraList = {
     [122465] = 10, -- Dematerialize
     [114028] = 10, -- Mass Spell Reflection
     [23920]  = 10, -- Spell Reflection
+    [8178]   = 10, -- Grounding Totem Effect
 
     -- Full CC (Stuns and Disorients)
     [33786] = 9,  -- Cyclone (Disorient)
@@ -135,6 +136,10 @@ sArenaMixin.auraList = {
     [113506] = 9, -- Cyclone (Symbiosis)
     [126355] = 9, -- Paralyzing Quill
     [126246] = 9, -- Lullaby
+    [91800] = 9,   -- Gnaw (Ghoul stun)
+    [64044] = 9, -- Psychic Horror (alt ID)
+    [31117]  = 9, -- UA silence (on dispel)
+    [126423] = 9, -- Petrifying Gaze (Basilisk pet) -- TODO: verify category
 
     -- Immunities
     [46924]  = 7, -- Bladestorm
@@ -151,15 +156,17 @@ sArenaMixin.auraList = {
     [20230]  = 7, -- Retaliation
     [16621]  = 7, -- Self Invulnerability
     [92681]  = 7, -- Phase Shift
-    [20594]  = 7, -- Stoneform
+    [20594]  = 7, -- Stoneform -- FIX
     [31224]  = 7, -- Cloak of Shadows
     [110788] = 7, -- Cloak of Shadows (Symbiosis)
     [27827]  = 7, -- Spirit of Redemption
+    [49039] = 7, -- Lichborne
+    [148467] = 7, -- Deterrence
 
     -- Anti-CCs
+    [115018] = 7, -- Desecrated Ground (All CC Immunity)
     [48707]  = 7, -- Anti-Magic Shell
     [137562] = 7, -- Nimble Brew
-    [8178]   = 7, -- Grounding Totem Effect
     [6940]   = 7, -- Hand of Sacrifice
     [5384]   = 7, -- Feign Death
     [34471]  = 7, -- The Beast Within
@@ -184,8 +191,9 @@ sArenaMixin.auraList = {
     [28730]  = 6, -- Arcane Torrent (Mana)
     [69179]  = 6, -- Arcane Torrent (Rage)
     [80483]  = 6, -- Arcane Torrent (Focus)
-    [31935] = 5, -- Avenger's Shield
-    [116709] = 5, -- Spear Hand Strike
+    [31935] = 6, -- Avenger's Shield
+    [116709] = 6, -- Spear Hand Strike
+    [142895] = 6, -- Silence (Ring of Peace?)
 
     [1766]   = 6, -- Kick (Rogue)
     [2139]   = 6, -- Counterspell (Mage)
@@ -211,16 +219,6 @@ sArenaMixin.auraList = {
     [78675] = 6, -- Solar Beam
     [81261] = 6, -- Solar Beam
 
-    [110575] = 5.6, -- Icebound Fortitude (Druid)
-    [48792]  = 5.6, -- Icebound Fortitude
-    [122783] = 5.6, -- Diffuse Magic
-    [116849] = 5.6, -- life Cocoon
-    [122470] = 5.6, -- Touch of Karma
-
-    [132158] = 5.5, -- Natures's Swiftness
-    [378081] = 5.5, -- Natures's Swiftness
-    [16188]  = 5.5, -- Nature's Swiftness
-
     -- Disarms
     [676]    = 5, -- Disarm
     [15752]  = 5, -- Disarm
@@ -232,7 +230,18 @@ sArenaMixin.auraList = {
     [126458] = 5, -- Grapple Weapon (Symbiosis)
     [137461] = 5, -- Ring of Peace (Disarm)
     [118093] = 5, -- Disarm (Voidwalker/Voidlord)
+    [142896] = 5, -- Disarmed
+    [116844] = 5, -- Ring of Peace (Silence / Disarm)
 
+    -- Big defensives
+    [116849] = 4.5, -- life Cocoon
+    [110575] = 4.5, -- Icebound Fortitude (Druid)
+    [48792]  = 4.5, -- Icebound Fortitude
+    [122783] = 4.5, -- Diffuse Magic
+    [122470] = 4.5, -- Touch of Karma
+    [132158] = 4.5, -- Natures's Swiftness
+    [378081] = 4.5, -- Natures's Swiftness
+    [16188]  = 4.5, -- Nature's Swiftness
 
     -- Roots
     [339]    = 4, -- Entangling Roots
@@ -241,7 +250,6 @@ sArenaMixin.auraList = {
     [4167]   = 4, -- Web
     [122]    = 4, -- Frost Nova
     [33395]  = 4, -- Freeze (Water Elemental)
-    [19306]  = 4, -- Counterattack
     [96294]  = 4, -- Chains of Ice (Chilblains)
     [113275] = 4, -- Entangling Roots (Symbiosis)
     [113770] = 4, -- Entangling Roots (?)
@@ -263,9 +271,6 @@ sArenaMixin.auraList = {
     [136634] = 4, -- Narrow Escape
     --[127797] = 4, -- Ursol's Vortex
     [81210] = 4, -- Net
-
-
-    -- Root Proc
     [35963]  = 4, -- Improved Wing Clip
     [19185]  = 4, -- Entrapment
     [23694]  = 4, -- Improved Hamstring
@@ -273,62 +278,147 @@ sArenaMixin.auraList = {
     [111340] = 4, -- Ice Ward
     [123407] = 4, -- Spinning Fire Blossom
     [64695]  = 4, -- Earthgrab Totem
+    [91807] = 4,   -- Shambling Rush
 
-
-    -- Refreshments
-    [22734]  = 3, -- Drink
-    [28612]  = 3, -- Cojured Food
-    [33717]  = 3, -- Cojured Food
-
-    -- Offensive Buffs
-    [124280] = 2, -- Touch of Karma
-    [13750]  = 2, -- Adrenaline Rush
-    [12042]  = 2, -- Arcane Power
-    [31884]  = 2, -- Avenging Wrath
-    [34936]  = 2, -- Backlash
-    [50334]  = 2, -- Berserk
-    [2825]   = 2, -- Bloodlust
-    [14177]  = 2, -- Cold Blood
-    [12292]  = 2, -- Death Wish
-    [16166]  = 2, -- Elemental Mastery
-    [12051]  = 2, -- Evocation
-    [18708]  = 2, -- Fel Domination
-    [12472]  = 2, -- Icy Veins
-    [29166]  = 2, -- Innervate
-    [32182]  = 2, -- Heroism
-    [51690]  = 2, -- Killing Spree
-    [47241]  = 2, -- Metamorphasis
-    [17941]  = 2, -- Shadow Trance
-    [10060]  = 2, -- Power Infusion
-    [12043]  = 2, -- Presence of Mind
-    [3045]   = 2, -- Rapid Fire
-    [1719]   = 2, -- Recklessness
-    [51713]  = 2, -- Shadow Dance
 
     -- Defensive Buffs
-    [3411]   = 1, -- Intervene
-    [53476]  = 1, -- Intervene (Hunter Pet)
-    [871]    = 1, -- Shield Wall
-    [33206]  = 1, -- Pain Suppresion
-    [47788]  = 1, -- Guardian Spirit
-    [47000]  = 1, -- Improved Blink
-    [5277]   = 1, -- Evasion
-    [30823]  = 1, -- Shamanistic Rage
-    [18499]  = 1, -- Berserker Rage
-    [55694]  = 1, -- Enraged Regeneration
-    [31842]  = 1, -- Divine Favor
-    [31821]  = 1, -- Aura Mastery
-    [1044]   = 1, -- Hand of Freedom
-    [22812]  = 1, -- Barkskin
-    [50461]  = 1, -- Anti-Magic Zone
-    [47484]  = 1, -- Huddle
+    [115610] = 2.5, -- Temporal Shield
+    [147833] = 2.4, -- Intervene
+    [114029] = 2.4, -- Safeguard
+    [3411]   = 2.4, -- Intervene
+    [53476]  = 2.4, -- Intervene (Hunter Pet)
+    [111264] = 2.3, -- Ice Ward (Buff)
+    [89485]  = 2.3, -- Inner Focus (instant cast immunity)
+    [113862] = 2.3, -- Greater Invisibility (90% dmg reduction)
+    [111397] = 2.3, -- Blood Horror (flee on attack)
+    [45182] = 2.2, -- Cheating Death (85% reduced inc dmg)
+    [31821]  = 2.2, -- Aura Mastery
+    [53480] = 2.1,   -- Roar of Sacrifice
+    [124280] = 2, -- Touch of Karma
+    [871]    = 2, -- Shield Wall
+    [33206]  = 2, -- Pain Suppresion
+    [47788]  = 2, -- Guardian Spirit
+    [47000]  = 2, -- Improved Blink
+    [5277]   = 2, -- Evasion
+    [30823]  = 2, -- Shamanistic Rage
+    [18499]  = 2, -- Berserker Rage
+    [55694]  = 2, -- Enraged Regeneration
+    [31842]  = 2, -- Divine Favor
+    [1044]   = 2, -- Hand of Freedom
+    [22812]  = 2, -- Barkskin
+    [50461]  = 2, -- Anti-Magic Zone
+    [47484]  = 2, -- Huddle
+    [97463]  = 2, -- Rallying Cry
+    [1966]  = 2, -- Feint
+    [86669] = 2, -- Guardian of Ancient Kings
+    [108359] = 2, -- Dark Regeneration
+    [108416] = 2, -- Sacrificial Pact
+    [104773] = 2, -- Unending Resolve
+    [110913] = 2, -- Dark Bargain
+    [79206] = 2, -- Spiritwalker's Grace (movement casting)
+    [108271] = 2, -- Astral Shift
+    [108281] = 2, -- Ancestral Guidance (healing)
+    [31616] = 2, -- Nature’s Guardian
+    [114052] = 2, -- Ascendance (Restoration)
+    [61336] = 2, -- Survival Instincts
+    [106922] = 2, -- Might of Ursoc
+    [122278] = 2, -- Dampen Harm
+    [120954] = 2, -- Fortifying Brew
+    [115176] = 2, -- Zen Meditation
+    [81782] = 2,   -- Power Word: Barrier
+    [109964] = 2, -- Spirit Shell (Buff)
+    [29166]  = 1.9, -- Innervate
+    [114908] = 1.8, -- Spirit Shell (Absorb Shield)
+    [64901] = 1.8, -- Hymn of Hope
+    [98007] = 1.8,   -- Spirit Link Totem
+    [25771] = 0.3,  -- Forbearance (debuff)
 
-    [76577] = 0.6, -- Smoke Bomb
+    [11426]  = 0.9, -- Ice Barrier
+    [114214] = 1, -- Angelic Bulwark
+    [114893] = 1,  -- Stone Bulwark Totem
+    [145629] = 1,  -- Anti-Magic Zone
+    [76577] = 0.8, -- Smoke Bomb
 
+
+
+    -- Offensive Buffs
+    [13750]  = 1, -- Adrenaline Rush
+    [12042]  = 1, -- Arcane Power
+    [31884]  = 1, -- Avenging Wrath
+    [34936]  = 1, -- Backlash
+    [50334]  = 1, -- Berserk
+    [2825]   = 1, -- Bloodlust
+    [14177]  = 1, -- Cold Blood
+    [12292]  = 1, -- Death Wish
+    [16166]  = 1, -- Elemental Mastery
+    [12051]  = 1, -- Evocation
+    [18708]  = 1, -- Fel Domination
+    [12472]  = 1, -- Icy Veins
+    [32182]  = 1, -- Heroism
+    [51690]  = 1, -- Killing Spree
+    [47241]  = 1, -- Metamorphasis
+    [17941]  = 1, -- Shadow Trance
+    [10060]  = 1, -- Power Infusion
+    [12043]  = 4.6, -- Presence of Mind
+    [3045]   = 1, -- Rapid Fire
+    [1719]   = 1, -- Recklessness
+    [51713]  = 1, -- Shadow Dance
+    [107574] = 1, -- Avatar
+    --[79140]  = 1, -- Vendetta
+    [121471] = 1, -- Shadow Blades
+    [83853] = 1, -- Combustion
+    [105809] = 1, -- Holy Avenger
+    [86698] = 1, -- Guardian of Ancient Kings (alt)
+    [113858] = 1, -- Dark Soul: Instability
+    [113860] = 1, -- Dark Soul: Misery
+    [113861] = 1, -- Dark Soul: Knowledge
+    [114050] = 1, -- Ascendance (Enhancement)
+    [114051] = 1, -- Ascendance (Elemental)
+    [102543] = 1, -- Incarnation: King of the Jungle
+    [102560] = 1, -- Incarnation: Chosen of Elune
+    [106951] = 1, -- Berserk
+    [124974] = 1, -- Nature’s Vigil
+    [51271] = 1, -- Pillar of Frost
+    [49206] = 1, -- Summon Gargoyle
+    [114868] = 1, -- Soul Reaper (Buff)
+    [137639] = 1, -- Storm, Earth, and Fire
+    [12328]  = 1, -- Sweeping Strikes
+    [113656] = 0.8, -- Fists of Fury
+
+
+
+    -- Misc
+    [77616] = 0.7, -- Dark Simulacrum (Buff, has spell)
+    [41635] = 0.5, -- Prayer of Mending
+    [64844] = 0.5, -- Divine Hymn
+    [116841] = 0.5, -- Tiger's Lust (70% speed)
+    [114896] = 0.5,  -- Windwalk Totem
+    [114206] = 0.5,  -- Skull Banner
+
+
+    -- Slows
+    [50435] = 0.4, -- Chilblains (50%)
+    [12323]  = 0.4, -- Piercing Howl (50%)
+    [113092] = 0.4, -- Frost Bomb (70%)
+    [120]   = 0.4, -- Cone of Cold (70%)
+    [60947]  = 0.4, -- Nightmare (30%)
+    [1715]  = 0.4,   -- Hamstring (50%)
+
+    [34709] = 0.6, -- Shadow Sight (Arena Eye)
+
+    -- Forms
     [5487] = 0.5, -- Bear Form
     [783] = 0.5, -- Travel Form
     [768] = 0.5, -- Cat Form
     [24858] = 0.5, -- Moonkin Form
+
+
+    -- Refreshments
+    [22734]  = 0.2, -- Drink
+    [28612]  = 0.2, -- Cojured Food
+    [33717]  = 0.2, -- Cojured Food
+
+    [108366] = 0.1, -- Soul Leech
 
     [108199] = 0, -- Gorefiend's Grasp
     [102793] = 0, -- Ursol's Vortex
@@ -337,6 +427,8 @@ sArenaMixin.auraList = {
     [51490]  = 0, -- Thunderstorm
     [6360]   = 0, -- Whiplash
     [115770] = 0, -- Fellash
+    [114018] = 0, -- Shroud of Concealment
+    [110960] = 0, -- Greater Invisibility (Invis)
 
 
     -- Miscellaneous
@@ -381,6 +473,147 @@ sArenaMixin.auraList = {
     [83073] = 4, -- Shattered Barrier (Rank 2)
     [50479] = 6, -- Nether Shock (Nether Ray)
     [86759] = 6, -- Silenced - Improved Kick (Rank 2)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local asd = {
+      -- Special
+    --[77606] = 10, -- Dark Simulacrum (Debuff)
+    [77616] = 3.5, -- Dark Simulacrum (Buff, has spell)
+
+    -- Anti-CCs
+    [115018] = 7.5, -- Desecrated Ground (All CC Immunity)
+
+    -- Immunities
+    [49039] = 7, -- Lichborne
+    [148467] = 7, -- Deterrence
+
+
+
+    -- Disarms
+    [142896] = 5, -- Disarmed
+    [116844] = 5, -- Ring of Peace (Silence / Disarm)
+
+    -- Offensive Buffs
+    [51271] = 2, -- Pillar of Frost
+    [49206] = 2, -- Summon Gargoyle
+    [114868] = 2, -- Soul Reaper (Buff)
+
+    -- Slows
+    [50435] = 0.6, -- Chilblains (50%)
+    [12323]  = 0.6, -- Piercing Howl (50%)
+    [113092] = 0.6, -- Frost Bomb (70%)
+    [120]   = 0.6, -- Cone of Cold (70%)
+    [60947]  = 0.6, -- Nightmare (30%)
+    [1715]  = 0.6,   -- Hamstring (50%)
+
+    -- Offensive Buffs
+    [107574] = 2, -- Avatar
+    [113344] = 2, -- Bloodbath (alt)
+    [12328]  = 2, -- Sweeping Strikes
+    [79140]  = 2, -- Vendetta
+    [121471] = 2, -- Shadow Blades
+    [83853] = 2, -- Combustion
+    [105809] = 2, -- Holy Avenger
+    [86698] = 2, -- Guardian of Ancient Kings (alt)
+    [113858] = 2, -- Dark Soul: Instability
+    [113860] = 2, -- Dark Soul: Misery
+    [113861] = 2, -- Dark Soul: Knowledge
+    [114050] = 2, -- Ascendance (Enhancement)
+    [114051] = 2, -- Ascendance (Elemental)
+    [102543] = 2, -- Incarnation: King of the Jungle
+    [102560] = 2, -- Incarnation: Chosen of Elune
+    [106951] = 2, -- Berserk
+    [124974] = 2, -- Nature’s Vigil
+
+    -- Defensive Buffs
+    [97463]  = 1, -- Rallying Cry
+    [114029] = 1, -- Safeguard
+    [147833] = 1, -- Intervene
+    [1966]  = 1, -- Feint
+    [45182] = 1, -- Cheating Death (85% reduced inc dmg)
+    [113862] = 1, -- Greater Invisibility (90% dmg reduction)
+    [86669] = 1, -- Guardian of Ancient Kings
+    [108359] = 1, -- Dark Regeneration
+    [111397] = 1, -- Blood Horror (flee on attack)
+    [108416] = 1, -- Sacrificial Pact
+    [104773] = 1, -- Unending Resolve
+    [110913] = 1, -- Dark Bargain
+    [79206] = 1, -- Spiritwalker's Grace (movement casting)
+    [108271] = 1, -- Astral Shift
+    [108281] = 1, -- Ancestral Guidance (healing)
+    [31616] = 1, -- Nature’s Guardian
+    [114052] = 1, -- Ascendance (Restoration)
+    [61336] = 1, -- Survival Instincts
+    [106922] = 1, -- Might of Ursoc
+    [122278] = 1, -- Dampen Harm
+    [120954] = 1, -- Fortifying Brew
+    [115176] = 1, -- Zen Meditation
+    [81782] = 1,   -- Power Word: Barrier
+    [53480] = 1,   -- Roar of Sacrifice
+
+    -- Lesser
+    [11426]  = 0.9, -- Ice Barrier
+    [115610] = 1.1, -- Temporal Shield
+    [114214] = 1, -- Angelic Bulwark
+    [108366] = 1, -- Soul Leech
+    [114893] = 1,  -- Stone Bulwark Totem
+    [145629] = 1,  -- Anti-Magic Zone
+
+    -- Misc
+    [114018] = 0, -- Shroud of Concealment
+    [111264] = 3.5, -- Ice Ward (Buff)
+    [110960] = 0, -- Greater Invisibility (Invis)
+    [89485]  = 3.5, -- Inner Focus (instant cast immunity)
+    [109964] = 1, -- Spirit Shell (Buff)
+    [114908] = 0.9, -- Spirit Shell (Absorb Shield)
+    [64901] = 0.5, -- Hymn of Hope
+    [25771] = 0.5,  -- Forbearance (debuff)
+    [98007] = 0.5,   -- Spirit Link Totem
+
+    -- Full CC (Stuns and Disorients)
+
+
+    -- Misc
+    --[81700]  = 1, -- Archangel (healing boost)
+    [41635] = 0.5, -- Prayer of Mending
+    [64844] = 0.5, -- Divine Hymn
+    [116841] = 0.5, -- Tiger's Lust (70% speed)
+    [114896] = 0.5,  -- Windwalk Totem
+    [114206] = 0.5,  -- Skull Banner
+
+
+    --[117405] = 9, -- Binding Shot (Will get stunned if move out)
+
+    -- Offensive Cooldowns
+    [113656] = 0.5, -- Fists of Fury
+    [137639] = 2, -- Storm, Earth, and Fire
+
+    -- CC
+    [91800] = 9,   -- Gnaw (Ghoul stun)
+    [64044] = 9, -- Psychic Horror (alt ID)
+    [31117]  = 9, -- UA silence (on dispel)
+    [91807] = 4,   -- Shambling Rush (root)
+    --[19577]  = 9, -- Intimidation (???)
+    [126423] = 9, -- Petrifying Gaze (Basilisk pet) -- TODO: verify category
+
 }
 
 function sArenaFrameMixin:FindInterrupt(event, spellID)

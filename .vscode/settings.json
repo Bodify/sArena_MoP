@@ -48,7 +48,14 @@
         "BOSS_DEBUFF_SIZE_INCREASE",
         "CompactUnitFrame_UtilSetBuff",
         "Settings",
-        "ReloadUI"
+        "ReloadUI",
+        "CompactPartyFrame",
+        "PartyFrame",
+        "StaticPopupDialogs",
+        "SettingsPanel",
+        "StaticPopup_Show",
+        "SettingsPanelSearchIcon",
+        "TargetFrameSpellBar"
     ],
     "Lua.diagnostics.disable": [
         "assign-type-mismatch"

@@ -1,3 +1,14 @@
+1.1.2
+- Added Masque support.
+- Added many defensives & offensive auras. And a few missing CC ones.
+- Tweaked aura priority a bit (more inc probably)
+- Add new "Reverse Cooldown Sweep" in Global DR Settings.
+- Add two new settings: Show Decimals on Class Icon & DR's (Shows below 6 seconds)
+- Add slider to adjust Dynamic DR duration in Global DR Settings.
+- Fix Arena Frames not showing if your arena partner didnt join the arena.
+- Fixed DR categories.
+- Had a bit more fun with the test mode.
+
 1.1.1
 - Add some missing auras
 
