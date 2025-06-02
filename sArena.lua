@@ -1,6 +1,5 @@
 sArenaMixin = {}
 sArenaFrameMixin = {}
-sArenaCastingBarExtensionMixin = {}
 
 sArenaMixin.layouts = {}
 sArenaMixin.defaultSettings = {
@@ -32,6 +31,7 @@ local UnitPowerType = UnitPowerType
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local testActive
 local masqueOn
+local TestTitle
 
 function sArenaMixin:OldConvert()
     local oldDB = sArena3DB or sArena2DB or sArenaDB
@@ -134,28 +134,21 @@ function sArenaMixin:HandleArenaStart()
 end
 
 local matchStartedMessages = {
-    "The Arena battle has begun!", -- English / Default
-    "¡La batalla en arena ha comenzado!", -- esES / esMX
-    "A batalha na Arena começou!", -- ptBR
-    "Der Arenakampf hat begonnen!", -- deDE
-    "Le combat d'arène commence\194\160!", -- frFR
-    "Бой начался!", -- ruRU
-    "투기장 전투가 시작되었습니다!", -- koKR
-    "竞技场战斗开始了！", -- zhCN
-    "竞技场的战斗开始了！", -- zhCN (Wotlk)
-    "競技場戰鬥開始了！", -- zhTW
+    ["The Arena battle has begun!"] = true, -- English / Default
+    ["¡La batalla en arena ha comenzado!"] = true, -- esES / esMX
+    ["A batalha na Arena começou!"] = true, -- ptBR
+    ["Der Arenakampf hat begonnen!"] = true, -- deDE
+    ["Le combat d'arène commence\194\160!"] = true, -- frFR
+    ["Бой начался!"] = true, -- ruRU
+    ["투기장 전투가 시작되었습니다!"] = true, -- koKR
+    ["竞技场战斗开始了！"] = true, -- zhCN
+    ["竞技场的战斗开始了！"] = true, -- zhCN (Wotlk)
+    ["競技場戰鬥開始了！"] = true, -- zhTW
 }
 
 local function IsMatchStartedMessage(msg)
-    if not msg then return false end
-    for _, phrase in ipairs(matchStartedMessages) do
-        if msg:find(phrase, 1, true) then
-            return true
-        end
-    end
-    return false
+    return matchStartedMessages[msg]
 end
-
 
 -- Parent Frame
 function sArenaMixin:OnLoad()
@@ -177,14 +170,15 @@ function sArenaMixin:OnEvent(event, ...)
         local _, combatEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, _, _, auraType =CombatLogGetCurrentEventInfo()
         if not combatEvents[combatEvent] then return end
         for i = 1, 5 do
-            local ArenaFrame = self["arena" .. i]
 
             if (sourceGUID == UnitGUID("arena" .. i)) then
+                local ArenaFrame = self["arena" .. i]
                 ArenaFrame:FindRacial(combatEvent, spellID)
                 ArenaFrame:FindTrinket(combatEvent, spellID)
             end
 
             if (destGUID == UnitGUID("arena" .. i)) then
+                local ArenaFrame = self["arena" .. i]
                 ArenaFrame:FindInterrupt(combatEvent, spellID)
 
                 if (auraType == "DEBUFF") then
@@ -212,6 +206,9 @@ function sArenaMixin:OnEvent(event, ...)
         self:SetMouseState(true)
 
         if (instanceType == "arena") then
+            if TestTitle then
+                TestTitle:Hide()
+            end
             self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
             self:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
         else
@@ -221,7 +218,7 @@ function sArenaMixin:OnEvent(event, ...)
     elseif event == "CHAT_MSG_BG_SYSTEM_NEUTRAL" then
         local msg = ...
         if IsMatchStartedMessage(msg) then
-            C_Timer.After(1, function()
+            C_Timer.After(0.5, function()
                 self:HandleArenaStart()
             end)
         end
@@ -450,6 +447,7 @@ function sArenaMixin:SetLayout(_, layout)
         self.layouts[layout]:Initialize(frame)
         frame:UpdatePlayer()
         sArenaMixin:ApplyPrototypeFont(frame)
+        frame:UpdateDRCooldownReverse()
     end
 
     self.optionsTable.args.layoutSettingsGroup.args = self.layouts[layout].optionsTable and
@@ -702,11 +700,7 @@ end
 
 
 local function addToMasque(frame, masqueGroup)
-    if frame and not frame.bbfMsq then
-        masqueGroup:AddButton(frame)
-        frame.bbfMsq = true
-        --print(frame:GetName())
-    end
+    masqueGroup:AddButton(frame)
 end
 
 function sArenaMixin:AddMasqueSupport()
@@ -714,12 +708,24 @@ function sArenaMixin:AddMasqueSupport()
     local Masque = LibStub("Masque", true)
     masqueOn = true
 
-    local sArenaClass = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Class")
+    local sArenaClass = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Class/Aura")
     local sArenaTrinket = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Trinket")
+    local sArenaSpecIcon = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "SpecIcon")
     local sArenaRacial = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Racial")
     local sArenaDRs = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "DRs")
     local sArenaFrame = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Frame")
-    local sArenaCastbarIcon = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Cast Icon")
+    local sArenaCastbar = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Castbar")
+    local sArenaCastbarIcon = Masque:Group("sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a", "Castbar Icon")
+
+    function sArenaMixin:RefreshMasque()
+        sArenaClass:ReSkin(true)
+        sArenaTrinket:ReSkin(true)
+        sArenaSpecIcon:ReSkin(true)
+        sArenaRacial:ReSkin(true)
+        sArenaDRs:ReSkin(true)
+        sArenaFrame:ReSkin(true)
+        sArenaCastbarIcon:ReSkin(true)
+    end
 
     local function MsqSkinIcon(frame, group)
         local skinWrapper = CreateFrame("Frame")
@@ -744,13 +750,17 @@ function sArenaMixin:AddMasqueSupport()
     for i = 1, 5 do
         local frame = self["arena" .. i]
         frame.FrameMsq = CreateFrame("Frame", nil, frame)
-        frame.FrameMsq:SetFrameStrata("DIALOG")
-        frame.FrameMsq:SetAllPoints(frame)
-        addToMasque(frame.FrameMsq, sArenaFrame)
+        frame.FrameMsq:SetFrameStrata("HIGH")
+        frame.FrameMsq:SetPoint("TOPLEFT", frame.HealthBar, "TOPLEFT", 0, 0)
+        frame.FrameMsq:SetPoint("BOTTOMRIGHT", frame.PowerBar, "BOTTOMRIGHT", 0, 0)
 
         frame.ClassIconMsq = CreateFrame("Frame", nil, frame)
         frame.ClassIconMsq:SetFrameStrata("DIALOG")
         frame.ClassIconMsq:SetAllPoints(frame.ClassIcon)
+
+        frame.SpecIconMsq = CreateFrame("Frame", nil, frame)
+        frame.SpecIconMsq:SetFrameStrata("DIALOG")
+        frame.SpecIconMsq:SetAllPoints(frame.SpecIcon)
 
         frame.TrinketMsq = CreateFrame("Frame", nil, frame)
         frame.TrinketMsq:SetFrameStrata("DIALOG")
@@ -760,16 +770,25 @@ function sArenaMixin:AddMasqueSupport()
         frame.RacialMsq:SetFrameStrata("DIALOG")
         frame.RacialMsq:SetAllPoints(frame.Racial)
 
+        frame.CastBarMsq = CreateFrame("Frame", nil, frame.CastBar)
+        frame.CastBarMsq:SetFrameStrata("HIGH")
+        frame.CastBarMsq:SetAllPoints(frame.CastBar)
+
+        addToMasque(frame.FrameMsq, sArenaFrame)
         addToMasque(frame.ClassIconMsq, sArenaClass)
+        addToMasque(frame.SpecIconMsq, sArenaSpecIcon)
         addToMasque(frame.TrinketMsq, sArenaTrinket)
         addToMasque(frame.RacialMsq, sArenaRacial)
+        addToMasque(frame.CastBarMsq, sArenaCastbar)
         MsqSkinIcon(frame.CastBar, sArenaCastbarIcon)
+
+        frame.CastBar.MSQ:SetFrameStrata("DIALOG")
 
         -- DR frames
         for _, category in ipairs(self.drCategories) do
             local drFrame = frame[category]
             if drFrame then
-                MsqSkinIcon(drFrame, sArenaDRs)
+                addToMasque(drFrame, sArenaDRs)
             end
         end
     end
@@ -890,21 +909,32 @@ function sArenaFrameMixin:UpdateClassIcon()
 
 	self.currentClassIconTexture = texture
 
-    local cropIcons = db and db.profile.layoutSettings[db.profile.currentLayout].cropIcons
-
-	-- Could do SetPortraitTexture() since its hooked anyway in my other addon
-	if (texture == "class") then
-        if db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon and self.specTexture then
+    if (texture == "class") then
+        if db.profile.hideClassIcon then
+            self.ClassIcon:SetTexture(nil)
+            if self.ClassIconMsq then
+                self.ClassIconMsq:Hide()
+            end
+        elseif db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon and self.specTexture then
             self.ClassIcon:SetTexture(self.specTexture)
-            self:SetTextureCrop(self.ClassIcon, cropIcons)
+            self:SetTextureCrop(self.ClassIcon, db.profile.layoutSettings[db.profile.currentLayout].cropIcons)
+            if self.ClassIconMsq then
+                self.ClassIconMsq:Show()
+            end
         else
             self.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
-            self.ClassIcon:SetTexCoord(unpack(cropIcons and sArenaMixin.croppedClassIcons[self.class] or sArenaMixin.classIcons[self.class]))
+            self.ClassIcon:SetTexCoord(unpack(db.profile.layoutSettings[db.profile.currentLayout].cropIcons and sArenaMixin.croppedClassIcons[self.class] or sArenaMixin.classIcons[self.class]))
+            if self.ClassIconMsq then
+                self.ClassIconMsq:Show()
+            end
         end
 		return
 	end
-	self:SetTextureCrop(self.ClassIcon, cropIcons)
+	self:SetTextureCrop(self.ClassIcon, db and db.profile.layoutSettings[db.profile.currentLayout].cropIcons)
 	self.ClassIcon:SetTexture(texture)
+    if self.ClassIconMsq then
+        self.ClassIconMsq:Show()
+    end
 end
 
 -- Returns the spec icon texture based on arena unit ID (1-5)
@@ -912,8 +942,14 @@ function sArenaFrameMixin:UpdateSpecIcon()
     if not db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon then
         self.SpecIcon.Texture:SetTexture(self.specTexture)
         self.SpecIcon:Show()
+        if self.SpecIconMsq then
+            self.SpecIconMsq:Show()
+        end
     else
         self.SpecIcon:Hide()
+        if self.SpecIconMsq then
+            self.SpecIconMsq:Hide()
+        end
     end
 end
 
@@ -1100,8 +1136,8 @@ local specTemplates = {
     AFF_WARLOCK = {
         class = "WARLOCK",
         specIcon = 136145,
-        castName = "Howl of Terror",
-        castIcon = 136147,
+        castName = "Fear",
+        castIcon = 136183,
         racial = 135726,
         specName = "Affliction",
     },
@@ -1277,13 +1313,31 @@ function sArenaMixin:Test()
     local shuffledPlayers = Shuffle()
     local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
     local replaceClassIcon = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
+    local hideClassIcon = db.profile.hideClassIcon
+
+    local topFrame
 
     for i = 1, 5 do
         local frame = self["arena" .. i]
         local data = shuffledPlayers[i]
 
+        if i == 1 then
+            topFrame = frame
+        end
+
+        if masqueOn and frame.masqueHidden then
+            frame.FrameMsq:Show()
+            frame.ClassIconMsq:Show()
+            frame.SpecIconMsq:Show()
+            frame.TrinketMsq:Show()
+            frame.RacialMsq:Show()
+            frame.CastBarMsq:Show()
+        end
+
         frame.tempName = data.name
         frame.tempClass = data.class
+        frame.tempSpecIcon = data.specIcon
+        frame.replaceClassIcon = replaceClassIcon
 
         frame:Show()
         frame:SetAlpha(1)
@@ -1301,16 +1355,35 @@ function sArenaMixin:Test()
         frame.PowerBar:SetValue(100)
 
         -- Class Icon and Spec Icon + Spec Name
-        if replaceClassIcon then
-            frame.SpecIcon:Hide()
-            frame.SpecIcon.Texture:SetTexture(nil)
-            frame.ClassIcon:SetTexture(data.specIcon, true)
-            frame:SetTextureCrop(self.ClassIcon, cropIcons)
+        if hideClassIcon then
+            frame.ClassIcon:SetTexture(nil)
+            if frame.ClassIconMsq then
+                frame.ClassIconMsq:Hide()
+            end
+            if frame.SpecIconMsq then
+                frame.SpecIconMsq:Hide()
+            end
         else
-            frame.SpecIcon:Show()
-            frame.SpecIcon.Texture:SetTexture(data.specIcon)
-            frame.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES", true)
-            frame.ClassIcon:SetTexCoord(unpack(cropIcons and self.croppedClassIcons[data.class] or self.classIcons[data.class]))
+            if replaceClassIcon then
+                frame.SpecIcon:Hide()
+                frame.SpecIcon.Texture:SetTexture(nil)
+                if frame.SpecIconMsq then
+                    frame.SpecIconMsq:Hide()
+                end
+                frame.ClassIcon:SetTexture(data.specIcon, true)
+                frame:SetTextureCrop(self.ClassIcon, cropIcons)
+            else
+                frame.SpecIcon:Show()
+                frame.SpecIcon.Texture:SetTexture(data.specIcon)
+                if frame.SpecIconMsq then
+                    frame.SpecIconMsq:Show()
+                end
+                frame.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES", true)
+                frame.ClassIcon:SetTexCoord(unpack(cropIcons and self.croppedClassIcons[data.class] or self.classIcons[data.class]))
+            end
+            if frame.ClassIconMsq then
+                frame.ClassIconMsq:Show()
+            end
         end
         frame.SpecNameText:SetText(data.specName)
         frame.SpecNameText:SetShown(db.profile.layoutSettings[db.profile.currentLayout].showSpecManaText)
@@ -1324,10 +1397,16 @@ function sArenaMixin:Test()
         frame.Trinket.Texture:SetTexture(133453)
         frame.Trinket.Texture:SetDesaturated(false)
         frame.Trinket.Cooldown:SetCooldown(currTime, math.random(20, 60))
+        if frame.TrinketMsq then
+            frame.TrinketMsq:Show()
+        end
 
         -- Racial
         frame.Racial.Texture:SetTexture(data.racial or 132089)
         frame.Racial.Cooldown:SetCooldown(currTime, math.random(20, 60))
+        if frame.RacialMsq then
+            frame.RacialMsq:Show()
+        end
 
         -- Colors
         local color = RAID_CLASS_COLORS[data.class]
@@ -1351,15 +1430,15 @@ function sArenaMixin:Test()
 
             if (n == 1) then
                 drFrame.Border:SetVertexColor(1, 0, 0, 1)
-                if drFrame.MSQ and drFrame.MSQ.__MSQ_Normal then
-                    drFrame.MSQ.__MSQ_Normal:SetDesaturated(true)
-                    drFrame.MSQ.__MSQ_Normal:SetVertexColor(1, 0, 0, 1)
+                if drFrame.__MSQ_New_Normal then
+                    drFrame.__MSQ_New_Normal:SetDesaturated(true)
+                    drFrame.__MSQ_New_Normal:SetVertexColor(1, 0, 0, 1)
                 end
             else
                 drFrame.Border:SetVertexColor(0, 1, 0, 1)
-                if drFrame.MSQ and drFrame.MSQ.__MSQ_Normal then
-                    drFrame.MSQ.__MSQ_Normal:SetDesaturated(true)
-                    drFrame.MSQ.__MSQ_Normal:SetVertexColor(0, 1, 0, 1)
+                if drFrame.__MSQ_New_Normal then
+                    drFrame.__MSQ_New_Normal:SetDesaturated(true)
+                    drFrame.__MSQ_New_Normal:SetVertexColor(0, 1, 0, 1)
                 end
             end
         end
@@ -1387,5 +1466,53 @@ function sArenaMixin:Test()
         frame.hideStatusText = false
         frame:SetStatusText("player")
         frame:UpdateStatusTextVisible()
+
+        if masqueOn and not db.profile.enableMasque and frame.FrameMsq then
+            frame.FrameMsq:Hide()
+            frame.ClassIconMsq:Hide()
+            frame.SpecIconMsq:Hide()
+            frame.TrinketMsq:Hide()
+            frame.RacialMsq:Hide()
+            frame.CastBarMsq:Hide()
+            frame.masqueHidden = true
+        end
+    end
+
+    if not TestTitle then
+        local f = CreateFrame("Frame")
+        TestTitle = f
+
+        local t = f:CreateFontString(nil, "OVERLAY")
+        t:SetFontObject("GameFontHighlightLarge")
+        t:SetFont(self.pFont, 12, "OUTLINE")
+        t:SetText("|T132961:16|t Ctrl+Shift+Click to drag|r")
+        t:SetPoint("BOTTOM", topFrame, "TOP", 17, 17)
+
+        local bg = f:CreateTexture(nil, "BACKGROUND", nil, -1)
+        bg:SetPoint("TOPLEFT", t, "TOPLEFT", -6, 4)
+        bg:SetPoint("BOTTOMRIGHT", t, "BOTTOMRIGHT", 6, -3)
+        bg:SetAtlas("PetList-ButtonBackground")
+
+        local t2 = f:CreateFontString(nil, "OVERLAY")
+        t2:SetFontObject("GameFontHighlightLarge")
+        t2:SetFont(self.pFont, 22, "OUTLINE")
+        t2:SetText("sArena |cff00ff96MoP|r|A:raceicon-pandaren-male:12:12|a")
+        t2:SetPoint("BOTTOM", t, "TOP", 0, 5)
+    end
+
+    TestTitle:Show()
+
+    if masqueOn then
+        sArenaMixin:RefreshMasque()
+        for i = 1, 5 do
+            local frame = self["arena" .. i]
+            for n = 1, 5 do
+                local drFrame = frame[self.drCategories[n]]
+                if drFrame.__MSQ_New_Normal then
+                    drFrame.__MSQ_New_Normal:SetDesaturated(true)
+                    drFrame.__MSQ_New_Normal:SetVertexColor(0, 1, 0, 1)
+                end
+            end
+        end
     end
 end

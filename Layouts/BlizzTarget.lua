@@ -31,6 +31,7 @@ layout.defaultSettings = {
         posY = -29,
         scale = 1.2,
         width = 82,
+        iconScale = 1,
     },
     dr = {
         posX = -114,

@@ -98,6 +98,9 @@ function sArenaFrameMixin:UpdateRacial()
 
 		if (self.parent.db.profile.racialCategories[self.race]) then
 			self.Racial.Texture:SetTexture(racialData[self.race].texture)
+            if self.RacialMsq then
+                self.RacialMsq:Show()
+            end
 		end
 
 	end
@@ -107,5 +110,8 @@ function sArenaFrameMixin:ResetRacial()
 	self.race = nil
 	self.Racial.Texture:SetTexture(nil)
 	self.Racial.Cooldown:Clear()
+    if self.RacialMsq then
+        self.RacialMsq:Hide()
+    end
 	self:UpdateRacial()
 end

@@ -93,9 +93,9 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
 
 	frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)))
 	frame.Border:SetVertexColor(unpack(severityColor[frame.severity]))
-    if frame.MSQ and frame.MSQ.__MSQ_Normal then
-        frame.MSQ.__MSQ_Normal:SetDesaturated(true)
-        frame.MSQ.__MSQ_Normal:SetVertexColor(unpack(severityColor[frame.severity]))
+    if frame.__MSQ_New_Normal then
+        frame.__MSQ_New_Normal:SetDesaturated(true)
+        frame.__MSQ_New_Normal:SetVertexColor(unpack(severityColor[frame.severity]))
     end
 
 	frame.severity = frame.severity + 1
@@ -245,6 +245,7 @@ drList = {
     [122057] = "Stun", -- Clash
     [15618] = "Stun", -- Snap Kick
     [9005]  = "Stun", -- Pounce
+    [102546] = "Stun", -- Pounce (MoP)
 
 	[16922] = "RandomStun", 	-- Celestial Focus (Starfire Stun)
 	[28445] = "RandomStun", 	-- Improved Concussive Shot
@@ -307,6 +308,8 @@ drList = {
     [136634] = "Root", -- Narrow Escape
     --[127797] = "PseudoRoot", -- Ursol's Vortex
     [81210] = "Root", -- Net
+    [135373] = "Root", -- Entrapment (MoP)
+    [45334]  = "Root", -- Immobilized (MoP)
 
 	[12494] = "RandomRoot", -- Frostbite
 	[55080] = "RandomRoot", -- Shattered Barrier

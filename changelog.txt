@@ -1,3 +1,12 @@
+1.1.4
+- Improve the Masque support and tweak the Frame setting. Also added Castbar and SpecIcon to it.
+- Tweaked auras and their priorities.
+- New Castbar Icon Scale Slider.
+- Fix the Invert DR Cooldown Sweep settings not getting applied on login.
+
+1.1.3
+- Fix potential nil error in some cases
+
 1.1.2
 - Added Masque support.
 - Added many defensives & offensive auras. And a few missing CC ones.

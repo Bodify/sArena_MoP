@@ -17,6 +17,9 @@ function sArenaFrameMixin:UpdateTrinketIcon()
     else
         self.Trinket.Texture:SetTexture(133453)
     end
+    if self.TrinketMsq then
+        self.TrinketMsq:Show()
+    end
 end
 
 function sArenaFrameMixin:UpdateTrinket(arg1, arg2)
@@ -49,4 +52,7 @@ function sArenaFrameMixin:ResetTrinket()
     self.Trinket.Texture:SetTexture(nil)
     self.Trinket.Cooldown:Clear()
     self.Trinket.Texture:SetDesaturated(false)
+    if self.TrinketMsq then
+        self.TrinketMsq:Hide()
+    end
 end

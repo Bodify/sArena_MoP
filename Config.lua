@@ -326,7 +326,7 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                             max = 5.0,
                             softMin = 0.5,
                             softMax = 3.0,
-                            step = 0.01,
+                            step = 0.001,
                             bigStep = 0.1,
                             isPercent = true,
                         },
@@ -351,8 +351,10 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
             type = "group",
             get = function(info) return info.handler.db.profile.layoutSettings[layoutName].castBar[info[#info]] end,
             set = function(info, val)
-                self:UpdateCastBarSettings(
-                    info.handler.db.profile.layoutSettings[layoutName].castBar, info, val)
+                self:UpdateCastBarSettings(info.handler.db.profile.layoutSettings[layoutName].castBar, info, val)
+                if sArenaMixin.RefreshMasque then
+                    sArenaMixin:RefreshMasque()
+                end
             end,
             args = {
                 positioning = {
@@ -411,6 +413,18 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                             max = 400,
                             step = 1,
                         },
+                        iconScale = {
+                            order = 3,
+                            name = "Icon Scale",
+                            type = "range",
+                            min = 0.1,
+                            max = 5.0,
+                            softMin = 0.5,
+                            softMax = 3.0,
+                            step = 0.01,
+                            bigStep = 0.1,
+                            isPercent = true,
+                        },
                     },
                 },
             },
@@ -421,8 +435,10 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
             type = "group",
             get = function(info) return info.handler.db.profile.layoutSettings[layoutName].dr[info[#info]] end,
             set = function(info, val)
-                self:UpdateDRSettings(info.handler.db.profile.layoutSettings[layoutName].dr, info,
-                    val)
+                self:UpdateDRSettings(info.handler.db.profile.layoutSettings[layoutName].dr, info, val)
+                if sArenaMixin.RefreshMasque then
+                    sArenaMixin:RefreshMasque()
+                end
             end,
             args = {
                 positioning = {
@@ -487,6 +503,15 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                             softMin = 8,
                             softMax = 64,
                             step = 1,
+                            -- get = function(info)
+                            --     return info.handler.db.profile.size or 24
+                            -- end,
+                            -- set = function(info, val)
+                            --     info.handler.db.profile.size = val
+                            --     if info.handler.RefreshMasque then
+                            --         info.handler:RefreshMasque()
+                            --     end
+                            -- end,
                         },
                         borderSize = {
                             order = 2,
@@ -569,6 +594,7 @@ function sArenaMixin:UpdateCastBarSettings(db, info, val)
         frame.CastBar:SetPoint("CENTER", frame, "CENTER", db.posX, db.posY)
         frame.CastBar:SetScale(db.scale)
         frame.CastBar:SetWidth(db.width)
+        frame.CastBar.Icon:SetScale(db.iconScale)
     end
 end
 
@@ -618,6 +644,10 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
 
             local text = dr.Cooldown.Text
             text:SetFont(text.fontFile, db.fontSize, "OUTLINE")
+            local sArenaText = dr.Cooldown.sArenaText
+            if sArenaText then
+                sArenaText:SetFont(text.fontFile, db.fontSize, "OUTLINE")
+            end
         end
     end
 end
@@ -869,6 +899,28 @@ else
                                             for i = 1, 5 do
                                                 info.handler["arena" .. i].Name:SetShown(val)
                                                 info.handler["arena" .. i].Name:SetText("arena"..i)
+                                            end
+                                        end,
+                                    },
+                                    hideClassIcon = {
+                                        order = 5,
+                                        name = "Hide Class Icon",
+                                        type = "toggle",
+                                        width = "full",
+                                        desc = "Hide the Class Icon and only show Auras when they are active.",
+                                        get = function(info) return info.handler.db.profile.hideClassIcon end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.hideClassIcon = val
+                                            for i = 1, 5 do
+                                                if val then
+                                                    info.handler["arena" .. i].ClassIcon:SetTexture(nil)
+                                                else
+                                                    if info.handler["arena" .. i].replaceClassIcon then
+                                                        info.handler["arena" .. i].ClassIcon:SetTexture(info.handler["arena" .. i].tempSpecIcon)
+                                                    else
+                                                        info.handler["arena" .. i].ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES", true)
+                                                    end
+                                                end
                                             end
                                         end,
                                     },
