@@ -19,23 +19,24 @@ sArenaMixin.auraList = {
     [122465] = 10, -- Dematerialize
     [114028] = 10, -- Mass Spell Reflection
     [23920]  = 10, -- Spell Reflection
+    [113002] = 10, -- Spell Reflection (Symbiosis)
     [8178]   = 10, -- Grounding Totem Effect
 
     -- Full CC (Stuns and Disorients)
     [33786] = 9,  -- Cyclone (Disorient)
-    [58861] = 9,  -- Bash (Spirit Wolves)
+    --[58861] = 9,  -- Bash (Spirit Wolves) --not mop
     [5211]  = 9,  -- Bash
     [6789]  = 9,  -- Death Coil
     [1833]  = 9,  -- Cheap Shot
     [7922]  = 9,  -- Charge Stun
-    [12809] = 9,  -- Concussion Blow
+    --[12809] = 9,  -- Concussion Blow --not mop
     [44572] = 9,  -- Deep Freeze
-    [60995] = 9,  -- Demon Charge
+    --[60995] = 9,  -- Demon Charge --not mop
     [47481] = 9,  -- Gnaw
     [853]   = 9,  -- Hammer of Justice
-    [85388] = 9,  -- Throwdown
+    --[85388] = 9,  -- Throwdown --not mop
     [90337] = 9,  -- Bad Manner
-    [20253] = 9,  -- Intercept
+    --[20253] = 9,  -- Intercept --not mop
     [30153] = 9,  -- Pursuit
     [24394] = 9,  -- Intimidation
     [408]   = 9,  -- Kidney Shot
@@ -45,7 +46,7 @@ sArenaMixin.auraList = {
     [6572]  = 9,  -- Ravage
     [30283] = 9,  -- Shadowfury
     [46968] = 9,  -- Shockwave
-    [39796] = 9,  -- Stoneclaw Stun
+    --[39796] = 9,  -- Stoneclaw Stun --not mop
     [20549] = 9,  -- War Stomp
     [61025]  = 9, -- Polymorph: Serpent
     [82691]  = 9, -- Ring of Frost
@@ -62,7 +63,8 @@ sArenaMixin.auraList = {
     [50519]  = 9, -- Sonic Blast
     [118271] = 9, -- Combustion Impact
     [119392] = 9, -- Charging Ox Wave
-    [122242] = 9, -- Clash
+    [122242] = 9, -- Clash (Symbiosis)
+    [122057] = 9, -- Clash
     [120086] = 9, -- Fists of Fury
     [119381] = 9, -- Leg Sweep
     [115752] = 9, -- Blinding Light (Glyphed)
@@ -86,17 +88,17 @@ sArenaMixin.auraList = {
     [132168] = 9, -- Shockwave
     [118895] = 9, -- Dragon Roar
     [115001] = 9, -- Remorseless Winter
-    [122057] = 9, -- Clash
     [102795] = 9, -- Bear Hug
     [77505] = 9, -- Earthquake
     [15618] = 9, -- Snap Kick
     [113953] = 9, -- Paralysis
     [137143] = 9, -- Blood Horror
     [87204] = 9, -- Sin and Punishment
+    [127361] = 9, -- Bear Hug (Symbiosis)
 
     -- Stun Procs
     [34510] = 9,  -- Stun (various procs)
-    [12355] = 9,  -- Impact
+    --[12355] = 9,  -- Impact --not mop
     [23454] = 9,  -- Stun
 
     -- Disorient / Incapacitate / Fear / Charm
@@ -127,7 +129,6 @@ sArenaMixin.auraList = {
     [9484]  = 9,  -- Shackle Undead
     [1090]  = 9,  -- Sleep
     [10326] = 9,  -- Turn Evil
-    [1450679] = 9, -- Turn Evil
     [145067] = 9, -- Turn Evil
     [19386] = 9,  -- Wyvern Sting
     [88625] = 9,  -- Chastise
@@ -146,16 +147,20 @@ sArenaMixin.auraList = {
     [115760] = 7, -- Glyph of Ice Block, Immune to Spells
     [46924]  = 7, -- Bladestorm
     [19263]  = 7, -- Deterrence
+    [110617] = 7, -- Deterrence (Symbiosis)
     [47585]  = 7, -- Dispersion
+    [110715] = 7, -- Dispersion (Symbiosis)
     [642]    = 7, -- Divine Shield
+    [110700] = 7, -- Divine Shield (Symbiosis)
     [498]    = 7, -- Divine Protection
     [45438]  = 7, -- Ice Block
+    [110696] = 7, -- Ice Block (Symbiosis)
     [34692]  = 7, -- The Beast Within
     [26064]  = 7, -- Shell Shield
     [19574]  = 7, -- Bestial Wrath
     [1022]   = 7, -- Hand of Protection
     [3169]   = 7, -- Invulnerability
-    [20230]  = 7, -- Retaliation
+    --[20230]  = 7, -- Retaliation --not mop
     [16621]  = 7, -- Self Invulnerability
     [92681]  = 7, -- Phase Shift
     [20594]  = 7, -- Stoneform -- FIX
@@ -168,6 +173,7 @@ sArenaMixin.auraList = {
     -- Anti-CCs
     [115018] = 7, -- Desecrated Ground (All CC Immunity)
     [48707]  = 7, -- Anti-Magic Shell
+    [110570] = 7, -- Anti-Magic Shell (Symbiosis)
     [137562] = 7, -- Nimble Brew
     [6940]   = 7, -- Hand of Sacrifice
     [5384]   = 7, -- Feign Death
@@ -178,9 +184,9 @@ sArenaMixin.auraList = {
     [1330]  = 6, -- Garrote
     [15487] = 6, -- Silence (Priest)
     [18498] = 6, -- Silenced - Gag Order (Warrior)
-    [18469] = 6, -- Silenced - Improved Counterspell (Mage)
+    --[18469] = 6, -- Silenced - Improved Counterspell (Mage)--not mop
     [55021] = 6, -- Silenced - Improved Counterspell (Mage alt)
-    [18425] = 6, -- Silenced - Improved Kick (Rogue)
+    --[18425] = 6, -- Silenced - Improved Kick (Rogue) --not mop
     [34490] = 6, -- Silencing Shot (Hunter)
     [24259] = 6, -- Spell Lock (Felhunter)
     [47476] = 6, -- Strangulate (Death Knight)
@@ -210,12 +216,12 @@ sArenaMixin.auraList = {
     [116705] = 6, -- Spear Hand Strike (Monk)
     [132409] = 6, -- Spell Lock (Warlock)
     [147362] = 6, -- Countershot (Hunter)
-    [171138] = 6, -- Shadow Lock (Warlock)
-    [183752] = 6, -- Consume Magic (Demon Hunter)
-    [187707] = 6, -- Muzzle (Hunter)
-    [212619] = 6, -- Call Felhunter (Warlock)
-    [231665] = 6, -- Avenger's Shield (Paladin)
-    [351338] = 6, -- Quell (Evoker)
+    --[171138] = 6, -- Shadow Lock (Warlock) --not mop
+    --[183752] = 6, -- Consume Magic (Demon Hunter) --not mop
+    --[187707] = 6, -- Muzzle (Hunter) -- not mop
+    --[212619] = 6, -- Call Felhunter (Warlock) --not mop
+    --[231665] = 6, -- Avenger's Shield (Paladin) --not mop
+    --[351338] = 6, -- Quell (Evoker) --not mop
     [97547]  = 6, -- Solar Beam
     [113286] = 6, -- Solar Beam
     [78675] = 6, -- Solar Beam
@@ -224,7 +230,7 @@ sArenaMixin.auraList = {
     -- Disarms
     [676]    = 5, -- Disarm
     [15752]  = 5, -- Disarm
-    [14251]  = 5, -- Riposte
+    --[14251]  = 5, -- Riposte --not mop
     [51722]  = 5, -- Dismantle
     [50541]  = 5, -- Clench (Scorpid)
     [91644]  = 5, -- Snatch (Bird of Prey)
@@ -243,7 +249,7 @@ sArenaMixin.auraList = {
     [122783] = 4.5, -- Diffuse Magic
     [122470] = 4.5, -- Touch of Karma
     [132158] = 4.5, -- Natures's Swiftness
-    [378081] = 4.5, -- Natures's Swiftness
+    --[378081] = 4.5, -- Natures's Swiftness --not mop
     [16188]  = 4.5, -- Nature's Swiftness
 
     -- Roots
@@ -276,7 +282,7 @@ sArenaMixin.auraList = {
     [81210] = 4, -- Net
     [35963]  = 4, -- Improved Wing Clip
     [19185]  = 4, -- Entrapment
-    [23694]  = 4, -- Improved Hamstring
+    --[23694]  = 4, -- Improved Hamstring --not mop
     [64803]  = 4, -- Entrapment
     [111340] = 4, -- Ice Ward
     [123407] = 4, -- Spinning Fire Blossom
@@ -290,6 +296,7 @@ sArenaMixin.auraList = {
     [147833] = 3.4, -- Intervene
     [114029] = 3.4, -- Safeguard
     [3411]   = 3.4, -- Intervene
+    [122292] = 3.4, -- Intervene (Symbiosis)
     [53476]  = 3.4, -- Intervene (Hunter Pet)
     [111264] = 3.3, -- Ice Ward (Buff)
     [89485]  = 3.3, -- Inner Focus (instant cast immunity)
@@ -303,8 +310,11 @@ sArenaMixin.auraList = {
     [118038] = 3, -- Die by the Sword
     [33206]  = 3, -- Pain Suppresion
     [47788]  = 3, -- Guardian Spirit
-    [47000]  = 3, -- Improved Blink
+    --[47000]  = 3, -- Improved Blink --not mop
     [5277]   = 3, -- Evasion
+    [126456] = 3, -- Fortifying Brew (Symbiosis)
+    [110791] = 3, -- Evasion (Symbiosis)
+    [122291] = 3, -- Unending Resolve (Symbiosis)
     [30823]  = 3, -- Shamanistic Rage
     [18499]  = 3, -- Berserker Rage
     [55694]  = 3, -- Enraged Regeneration
@@ -338,6 +348,7 @@ sArenaMixin.auraList = {
     [114214] = 2, -- Angelic Bulwark
     [114893] = 2,  -- Stone Bulwark Totem
     [145629] = 2,  -- Anti-Magic Zone
+    [117679] = 2, -- Incarnation: Tree of Life
 
     -- Offensive Buffs
     [13750]  = 2, -- Adrenaline Rush
@@ -346,16 +357,16 @@ sArenaMixin.auraList = {
     [34936]  = 2, -- Backlash
     [50334]  = 2, -- Berserk
     [2825]   = 2, -- Bloodlust
-    [14177]  = 2, -- Cold Blood
+    --[14177]  = 2, -- Cold Blood --not mop
     [12292]  = 2, -- Death Wish
     [16166]  = 2, -- Elemental Mastery
     [12051]  = 2, -- Evocation
-    [18708]  = 2, -- Fel Domination
+    --[18708]  = 2, -- Fel Domination --not mop
     [12472]  = 2, -- Icy Veins
     [131078] = 2, -- Icy Veins (split)
     [32182]  = 2, -- Heroism
     [51690]  = 2, -- Killing Spree
-    [47241]  = 2, -- Metamorphasis
+    --[47241]  = 2, -- Metamorphasis --not mop
     [17941]  = 2, -- Shadow Trance
     [10060]  = 2, -- Power Infusion
     [3045]   = 2, -- Rapid Fire
@@ -364,7 +375,6 @@ sArenaMixin.auraList = {
     [107574] = 2, -- Avatar
     --[79140]  = 2, -- Vendetta
     [121471] = 2, -- Shadow Blades
-    [83853] = 2, -- Combustion
     [105809] = 2, -- Holy Avenger
     [86698] = 2, -- Guardian of Ancient Kings (alt)
     [113858] = 2, -- Dark Soul: Instability
@@ -385,24 +395,25 @@ sArenaMixin.auraList = {
 
 
     [76577] = 1.8, -- Smoke Bomb
-
-
-    -- Lesser defensives
-    [1966]  = 1.7, -- Feint
-    [102351] = 1.7, -- Cenarion Ward
-    [33763] = 1.6, -- Lifebloom
-    [121279] = 1.6, -- Lifebloom
-
+    [88611] = 1.8, -- Smoke Bomb
 
     -- Freedoms
-    [96268] = 1, -- Deaths Advance
-    [62305] = 1, -- Master's Call
+    [96268] = 1.4, -- Deaths Advance
+    [62305] = 1.4, -- Master's Call
+
+    -- Lesser defensives
+    [1966]  = 1.3, -- Feint
+    --[102351] = 1.2, -- Cenarion Ward
+    --[33763] = 1.1, -- Lifebloom
+    --[121279] = 1.1, -- Lifebloom
 
 
     -- Misc
     [34709] = 0.9, -- Shadow Sight (Arena Eye)
+    [110806] = 0.9, -- Spirit Walker's Grace (Symbiosis)
     [11426]  = 0.8, -- Ice Barrier
     [113656] = 0.8, -- Fists of Fury
+    [83853] = 0.8, -- Combustion (Debuff)
     [77616] = 0.7, -- Dark Simulacrum (Buff, has spell)
     [41635] = 0.5, -- Prayer of Mending
     [64844] = 0.5, -- Divine Hymn
@@ -427,8 +438,8 @@ sArenaMixin.auraList = {
     -- Miscellaneous
     [25771] = 0.3,  -- Forbearance (debuff)
     [22734]  = 0.2, -- Drink
-    [28612]  = 0.2, -- Cojured Food
-    [33717]  = 0.2, -- Cojured Food
+    --[28612]  = 0.2, -- Cojured Food --not mop
+    --[33717]  = 0.2, -- Cojured Food --not mop
     [108366] = 0.1, -- Soul Leech
     [41425]  = 0.1, -- Hypothermia
     [108199] = 0, -- Gorefiend's Grasp
@@ -442,6 +453,7 @@ sArenaMixin.auraList = {
     [110960] = 0, -- Greater Invisibility (Invis)
     [66]     = 0, -- Invisibility
     [6346]   = 0, -- Fear Ward
+    [110717] = 0, -- Fear Ward (Symbiosis)
     [2457]   = 0, -- Battle Stance
     [2458]   = 0, -- Berserker Stance
     [71]     = 0, -- Defensive Stance
@@ -453,11 +465,11 @@ sArenaMixin.auraList = {
     -- ##########################
     -- *** Controlled Stun Effects ***
     [93433] = 9, -- Burrow Attack (Worm)
-    [83046] = 9, -- Improved Polymorph (Rank 1)
-    [83047] = 9, -- Improved Polymorph (Rank 2)
+    --[83046] = 9, -- Improved Polymorph (Rank 1) --not mop
+    --[83047] = 9, -- Improved Polymorph (Rank 2) --not in mop
     --[2812]  = 9, -- Holy Wrath
     --[88625] = "Stunned", -- Holy Word: Chastise
-    [93986] = 9, -- Aura of Foreboding
+    --[93986] = 9, -- Aura of Foreboding--not mop
     [54786] = 9, -- Demon Leap
 
     -- *** Non-controlled Stun Effects ***
@@ -469,17 +481,17 @@ sArenaMixin.auraList = {
     [5134]  = 9, -- Flash Bomb Fear (Item)
 
     -- *** Controlled Root Effects ***
-    [96293] = 4, -- Chains of Ice (Chilblains Rank 1)
-    [87193] = 4, -- Paralysis
+    --[96293] = 4, -- Chains of Ice (Chilblains Rank 1) --not mop
+    --[87193] = 4, -- Paralysis -- not mop
 
     -- *** Non-controlled Root Effects ***
     [47168] = 4, -- Improved Wing Clip
-    [83301] = 4, -- Improved Cone of Cold (Rank 1)
-    [83302] = 4, -- Improved Cone of Cold (Rank 2)
-    [55080] = 4, -- Shattered Barrier (Rank 1)
-    [83073] = 4, -- Shattered Barrier (Rank 2)
+    --[83301] = 4, -- Improved Cone of Cold (Rank 1) --not mop
+    --[83302] = 4, -- Improved Cone of Cold (Rank 2) --not mop
+    --[55080] = 4, -- Shattered Barrier (Rank 1) --not mop
+    --[83073] = 4, -- Shattered Barrier (Rank 2) --not mop
     [50479] = 6, -- Nether Shock (Nether Ray)
-    [86759] = 6, -- Silenced - Improved Kick (Rank 2)
+    --[86759] = 6, -- Silenced - Improved Kick (Rank 2) --not mop
 
 
 
@@ -514,6 +526,27 @@ function sArenaFrameMixin:FindInterrupt(event, spellID)
 	end
 end
 
+local tooltipScanner = CreateFrame("GameTooltip", "sArenaTooltipScanner", nil, "GameTooltipTemplate")
+tooltipScanner:SetOwner(WorldFrame, "ANCHOR_NONE")
+
+local function AuraTooltipContains(unit, index, filter, search)
+    tooltipScanner:ClearLines()
+    tooltipScanner:SetUnitAura(unit, index, filter)
+
+    local line
+    for i = 1, tooltipScanner:NumLines() do
+        line = _G["sArenaTooltipScannerTextLeft"..i]
+        if line then
+            local text = line:GetText()
+            if text and text:find(search, 1, true) then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 function sArenaFrameMixin:FindAura()
     local unit = self.unit
     local auraList = sArenaMixin.auraList
@@ -543,7 +576,16 @@ function sArenaFrameMixin:FindAura()
             local texture = aura.icon
 
             local priority = auraList[spellID]
+
             if priority then
+
+                -- Icebound Fortitude, Check if it's glyphed to be immune to CC
+                if spellID == 51271 then
+                    if AuraTooltipContains(unit, n, filter, "70%%") then
+                        priority = 7
+                    end
+                end
+
                 local remaining = expirationTime - GetTime()
 
                 if (priority > currentPriority)

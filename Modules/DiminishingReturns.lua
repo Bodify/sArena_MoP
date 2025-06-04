@@ -93,6 +93,9 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
 
 	frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)))
 	frame.Border:SetVertexColor(unpack(severityColor[frame.severity]))
+    if frame.PixelBorder then
+        frame.PixelBorder:SetVertexColor(unpack(severityColor[frame.severity]))
+    end
     if frame.__MSQ_New_Normal then
         frame.__MSQ_New_Normal:SetDesaturated(true)
         frame.__MSQ_New_Normal:SetVertexColor(unpack(severityColor[frame.severity]))
@@ -246,6 +249,7 @@ drList = {
     [15618] = "Stun", -- Snap Kick
     [9005]  = "Stun", -- Pounce
     [102546] = "Stun", -- Pounce (MoP)
+    [127361] = "Stun", -- Bear Hug (Symbiosis)
 
 	[16922] = "RandomStun", 	-- Celestial Focus (Starfire Stun)
 	[28445] = "RandomStun", 	-- Improved Concussive Shot

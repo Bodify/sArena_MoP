@@ -10,15 +10,28 @@ end
 
 function sArenaFrameMixin:UpdateTrinketIcon()
     local unit = self.unit
-    local faction, _ = UnitFactionGroup(unit)
 
-    if (faction == "Alliance") then
-        self.Trinket.Texture:SetTexture(133452)
+    if self.parent.db.profile.colorTrinket then
+        self.Trinket.Texture:SetColorTexture(0,1,0)
     else
-        self.Trinket.Texture:SetTexture(133453)
+        local faction, _ = UnitFactionGroup(unit)
+        if (faction == "Alliance") then
+            self.Trinket.Texture:SetTexture(133452)
+        else
+            self.Trinket.Texture:SetTexture(133453)
+        end
     end
+
     if self.TrinketMsq then
         self.TrinketMsq:Show()
+    end
+
+    if self.PixelBorders and self.PixelBorders.trinket then
+        self.PixelBorders.trinket:Show()
+    end
+
+    if self.parent.db.profile.swapHumanTrinket and self.race == "Human" then
+        self:UpdateRacial(true)
     end
 end
 
@@ -37,10 +50,18 @@ function sArenaFrameMixin:UpdateTrinket(arg1, arg2)
         end
         if (startTime ~= 0 and duration ~= 0 and trinket.Texture:GetTexture()) then
             trinket.Cooldown:SetCooldown(startTime / 1000.0, duration / 1000.0)
-            trinket.Texture:SetDesaturated(true)
+            if self.parent.db.profile.colorTrinket then
+                self.Trinket.Texture:SetColorTexture(1,0,0)
+            else
+                trinket.Texture:SetDesaturated(true)
+            end
         else
             trinket.Cooldown:Clear()
-            trinket.Texture:SetDesaturated(false)
+            if self.parent.db.profile.colorTrinket then
+                self.Trinket.Texture:SetColorTexture(0,1,0)
+            else
+                trinket.Texture:SetDesaturated(false)
+            end
         end
     else
         self:UpdateTrinketIcon()
@@ -54,5 +75,8 @@ function sArenaFrameMixin:ResetTrinket()
     self.Trinket.Texture:SetDesaturated(false)
     if self.TrinketMsq then
         self.TrinketMsq:Hide()
+    end
+    if self.PixelBorders and self.PixelBorders.trinket then
+        self.PixelBorders.trinket:Hide()
     end
 end

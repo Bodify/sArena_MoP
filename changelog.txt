@@ -1,3 +1,10 @@
+1.1.5
+- Add new layout "Pixelated".
+- Add "Swap Trinket with Race for Human" setting.
+- Add "Color Trinket" setting. Colors Trinket flat green when its available and red when its on cooldown.
+- Few more aura tweaks.
+- Added Icebound Fortitude glyph detection to raise its priority when they're immune to CC.
+
 1.1.4
 - Improve the Masque support and tweak the Frame setting. Also added Castbar and SpecIcon to it.
 - Tweaked auras and their priorities.

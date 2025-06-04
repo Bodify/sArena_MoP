@@ -415,8 +415,10 @@ function sArenaMixin:SetDRBorderShownStatus()
             if drFrame then
                 if self.db.profile.disableDRBorder then
                     drFrame.Border:Hide()
-                else
+                    drFrame.Border.hidden = true
+                elseif drFrame.Border.hidden then
                     drFrame.Border:Show()
+                    drFrame.Border.hidden = nil
                 end
             end
         end
@@ -440,6 +442,8 @@ function sArenaMixin:SetLayout(_, layout)
 
     db.profile.currentLayout = layout
     self.layoutdb = self.db.profile.layoutSettings[layout]
+
+    self:RemovePixelBorders()
 
     for i = 1, 5 do
         local frame = self["arena" .. i]
@@ -915,17 +919,26 @@ function sArenaFrameMixin:UpdateClassIcon()
             if self.ClassIconMsq then
                 self.ClassIconMsq:Hide()
             end
+            if self.PixelBorders and self.PixelBorders.classIcon then
+                self.PixelBorders.classIcon:Hide()
+            end
         elseif db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon and self.specTexture then
             self.ClassIcon:SetTexture(self.specTexture)
             self:SetTextureCrop(self.ClassIcon, db.profile.layoutSettings[db.profile.currentLayout].cropIcons)
             if self.ClassIconMsq then
                 self.ClassIconMsq:Show()
             end
+            if self.PixelBorders and self.PixelBorders.classIcon then
+                self.PixelBorders.classIcon:Show()
+            end
         else
             self.ClassIcon:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
             self.ClassIcon:SetTexCoord(unpack(db.profile.layoutSettings[db.profile.currentLayout].cropIcons and sArenaMixin.croppedClassIcons[self.class] or sArenaMixin.classIcons[self.class]))
             if self.ClassIconMsq then
                 self.ClassIconMsq:Show()
+            end
+            if self.PixelBorders and self.PixelBorders.classIcon then
+                self.PixelBorders.classIcon:Show()
             end
         end
 		return
@@ -934,6 +947,9 @@ function sArenaFrameMixin:UpdateClassIcon()
 	self.ClassIcon:SetTexture(texture)
     if self.ClassIconMsq then
         self.ClassIconMsq:Show()
+    end
+    if self.PixelBorders and self.PixelBorders.classIcon then
+        self.PixelBorders.classIcon:Show()
     end
 end
 
@@ -1097,8 +1113,17 @@ local specTemplates = {
         specIcon = 461112,
         castName = "Cobra Shot",
         castIcon = 461114,
-        racial = 136225,
+        racial = 132089,
         specName = "Beast Mastery",
+        unint = true,
+    },
+    MM_HUNTER = {
+        class = "HUNTER",
+        specIcon = 461113,
+        castName = "Aimed Shot",
+        castIcon = 132222,
+        racial = 136225,
+        specName = "Marksmanship",
         unint = true,
     },
     ELE_SHAMAN = {
@@ -1209,7 +1234,7 @@ local specTemplates = {
     UNHOLY_DK = {
         class = "DEATHKNIGHT",
         specIcon = 135775,
-        racial = 136145,
+        racial = 135726,
         specName = "Unholy",
     },
     SUB_ROGUE = {
@@ -1222,14 +1247,18 @@ local specTemplates = {
 
 local testPlayers = {
     { template = "BM_HUNTER", name = "Despytimes" },
+    { template = "MM_HUNTER", name = "Jellybeans" },
     { template = "ELE_SHAMAN", name = "Bluecheese" },
     { template = "ENH_SHAMAN", name = "Saul" },
     { template = "RESTO_SHAMAN", name = "Cdew" },
+    { template = "RESTO_SHAMAN", name = "Absterge" },
     { template = "RESTO_SHAMAN", name = "Lontarito" },
     { template = "ELE_SHAMAN", name = "Whaazzlasso", castName = "Feet Up", castIcon = 133029 },
     { template = "RESTO_DRUID", name = "Metaphors" },
     { template = "RESTO_DRUID", name = "Flop" },
     { template = "FERAL_DRUID", name = "Sodapoopin" },
+    { template = "FERAL_DRUID", name = "Bean" },
+    { template = "FERAL_DRUID", name = "Snupy" },
     { template = "AFF_WARLOCK", name = "Chan" },
     { template = "ARMS_WARRIOR", name = "Trillebartom" },
     { template = "DISC_PRIEST", name = "Hydra" },
@@ -1241,10 +1270,13 @@ local testPlayers = {
     { template = "FROST_MAGE", name = "Xaryu" },
     { template = "FIRE_MAGE", name = "Hansol" },
     { template = "ARCANE_MAGE", name = "Ziqo" },
+    { template = "ARCANE_MAGE", name = "Mmrklepter" },
     { template = "RET_PALADIN", name = "Judgewhaazz" },
     { template = "UNHOLY_DK", name = "Darthchan" },
     { template = "UNHOLY_DK", name = "Mes" },
     { template = "SUB_ROGUE", name = "Nahj" },
+    { template = "SUB_ROGUE", name = "Cshero" },
+    { template = "SUB_ROGUE", name = "Pshero" },
     { template = "SUB_ROGUE", name = "Whaazz" },
     { template = "SUB_ROGUE", name = "Pikawhoo" },
     { template = "ARMS_WARRIOR", name = "Magnusz" },
@@ -1314,6 +1346,7 @@ function sArenaMixin:Test()
     local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
     local replaceClassIcon = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
     local hideClassIcon = db.profile.hideClassIcon
+    local colorTrinket = db.profile.colorTrinket
 
     local topFrame
 
@@ -1341,6 +1374,10 @@ function sArenaMixin:Test()
 
         frame:Show()
         frame:SetAlpha(1)
+        if frame.PixelBorders and not frame.PixelBorders.hide then
+            frame.PixelBorders.trinket:Show()
+            frame.PixelBorders.racial:Show()
+        end
 
         frame.HealthBar:SetMinMaxValues(0, 100)
         frame.HealthBar:SetValue(100)
@@ -1394,8 +1431,17 @@ function sArenaMixin:Test()
         frame.Name:SetShown(db.profile.showNames or db.profile.showArenaNumber)
 
         -- Trinket
-        frame.Trinket.Texture:SetTexture(133453)
-        frame.Trinket.Texture:SetDesaturated(false)
+        if colorTrinket then
+            if i <= 2 then
+                frame.Trinket.Texture:SetColorTexture(0,1,0)
+                frame.Trinket.Cooldown:Clear()
+            else
+                frame.Trinket.Texture:SetColorTexture(1,0,0)
+            end
+        else
+            frame.Trinket.Texture:SetTexture(133453)
+            frame.Trinket.Texture:SetDesaturated(false)
+        end
         frame.Trinket.Cooldown:SetCooldown(currTime, math.random(20, 60))
         if frame.TrinketMsq then
             frame.TrinketMsq:Show()
@@ -1422,23 +1468,32 @@ function sArenaMixin:Test()
         frame.PowerBar:SetStatusBarColor(powerColor.r, powerColor.g, powerColor.b)
 
         -- DR Frames
-        for n = 1, 5 do
-            local drFrame = frame[self.drCategories[n]]
-            drFrame.Icon:SetTexture(132298)
-            drFrame:Show()
-            drFrame.Cooldown:SetCooldown(currTime, n == 1 and 60 or math.random(20, 50))
+        local drsEnabled = #self.drCategories
+        if drsEnabled > 0 then
+            for n = 1, 5 do
+                local drFrame = frame[self.drCategories[n]]
+                drFrame.Icon:SetTexture(132298)
+                drFrame:Show()
+                drFrame.Cooldown:SetCooldown(currTime, n == 1 and 60 or math.random(20, 50))
 
-            if (n == 1) then
-                drFrame.Border:SetVertexColor(1, 0, 0, 1)
-                if drFrame.__MSQ_New_Normal then
-                    drFrame.__MSQ_New_Normal:SetDesaturated(true)
-                    drFrame.__MSQ_New_Normal:SetVertexColor(1, 0, 0, 1)
-                end
-            else
-                drFrame.Border:SetVertexColor(0, 1, 0, 1)
-                if drFrame.__MSQ_New_Normal then
-                    drFrame.__MSQ_New_Normal:SetDesaturated(true)
-                    drFrame.__MSQ_New_Normal:SetVertexColor(0, 1, 0, 1)
+                if (n == 1) then
+                    drFrame.Border:SetVertexColor(1, 0, 0, 1)
+                    if frame.PixelBorder then
+                        frame.PixelBorder:SetVertexColor(1, 0, 0, 1)
+                    end
+                    if drFrame.__MSQ_New_Normal then
+                        drFrame.__MSQ_New_Normal:SetDesaturated(true)
+                        drFrame.__MSQ_New_Normal:SetVertexColor(1, 0, 0, 1)
+                    end
+                else
+                    drFrame.Border:SetVertexColor(0, 1, 0, 1)
+                    if frame.PixelBorder then
+                        frame.PixelBorder:SetVertexColor(0, 1, 0, 1)
+                    end
+                    if drFrame.__MSQ_New_Normal then
+                        drFrame.__MSQ_New_Normal:SetDesaturated(true)
+                        drFrame.__MSQ_New_Normal:SetVertexColor(0, 1, 0, 1)
+                    end
                 end
             end
         end

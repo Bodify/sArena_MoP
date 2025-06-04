@@ -639,8 +639,8 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
             local dr = frame[categories[n]]
 
             dr:SetSize(db.size, db.size)
-            dr.Border:SetPoint("TOPLEFT", dr, "TOPLEFT", -db.borderSize, db.borderSize)
-            dr.Border:SetPoint("BOTTOMRIGHT", dr, "BOTTOMRIGHT", db.borderSize, -db.borderSize)
+            dr.Border:SetPoint("TOPLEFT", dr, "TOPLEFT", -db.borderSize or 1, db.borderSize or 1)
+            dr.Border:SetPoint("BOTTOMRIGHT", dr, "BOTTOMRIGHT", db.borderSize or 1, -db.borderSize or 1)
 
             local text = dr.Cooldown.Text
             text:SetFont(text.fontFile, db.fontSize, "OUTLINE")
@@ -924,6 +924,29 @@ else
                                             end
                                         end,
                                     },
+                                    colorTrinket = {
+                                        order = 6,
+                                        name = "Color Trinket",
+                                        type = "toggle",
+                                        width = "full",
+                                        desc = "Replace Trinket texture with a solid green color when it's up and red when it's on cooldown.",
+                                        get = function(info) return info.handler.db.profile.colorTrinket end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.colorTrinket = val
+                                            for i = 1, 5 do
+                                                if val then
+                                                    if i <= 2 then
+                                                        info.handler["arena" .. i].Trinket.Texture:SetColorTexture(0,1,0)
+                                                        info.handler["arena" .. i].Trinket.Cooldown:Clear()
+                                                    else
+                                                        info.handler["arena" .. i].Trinket.Texture:SetColorTexture(1,0,0)
+                                                    end
+                                                else
+                                                    info.handler["arena" .. i].Trinket.Texture:SetTexture(133453)
+                                                end
+                                            end
+                                        end,
+                                    },
                                 },
                             },
                             masque = {
@@ -1041,6 +1064,25 @@ else
                                 set = function(info, key, val) info.handler.db.profile.racialCategories[key] = val end,
                                 values = racialCategories,
                             },
+                            racialOptions = {
+                                order = 1,
+                                type = "group",
+                                name = "Options",
+                                inline = true,
+                                args = {
+                                    swapHumanTrinket = {
+                                        order = 1,
+                                        name = "Swap Trinket with Human Racial",
+                                        desc = "Swap the Trinket texture with Human Racial for Humans and hide the Racial Icon.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.swapHumanTrinket end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.swapHumanTrinket = val
+                                        end,
+                                    },
+                                }
+                            }
                         },
                     },
                 },

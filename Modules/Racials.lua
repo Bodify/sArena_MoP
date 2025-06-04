@@ -92,8 +92,8 @@ function sArenaFrameMixin:FindRacial(event, spellID)
 	end
 end
 
-function sArenaFrameMixin:UpdateRacial()
-	if (not self.race) then
+function sArenaFrameMixin:UpdateRacial(update)
+	if (not self.race) or update then
 		self.race = select(2, UnitRace(self.unit))
 
 		if (self.parent.db.profile.racialCategories[self.race]) then
@@ -101,8 +101,31 @@ function sArenaFrameMixin:UpdateRacial()
             if self.RacialMsq then
                 self.RacialMsq:Show()
             end
+            if self.PixelBorders and self.PixelBorders.racial then
+                self.PixelBorders.racial:Show()
+            end
 		end
 
+        if self.parent.db.profile.swapHumanTrinket and self.race == "Human" then
+            self.Racial.Texture:SetTexture(nil)
+            if self.RacialMsq then
+                self.RacialMsq:Hide()
+            end
+            if self.PixelBorders and self.PixelBorders.racial then
+                self.PixelBorders.racial:Hide()
+            end
+
+            if self.parent.db.profile.colorTrinket then
+                local start, duration = self.Trinket.Cooldown:GetCooldownTimes()
+                if duration and duration > 0 and (start > 0) then
+                    self.Trinket.Texture:SetColorTexture(1,0,0)
+                else
+                    self.Trinket.Texture:SetColorTexture(0,1,0)
+                end
+            else
+                self.Trinket.Texture:SetTexture(racialData[self.race].texture)
+            end
+        end
 	end
 end
 
@@ -112,6 +135,9 @@ function sArenaFrameMixin:ResetRacial()
 	self.Racial.Cooldown:Clear()
     if self.RacialMsq then
         self.RacialMsq:Hide()
+    end
+    if self.PixelBorders and self.PixelBorders.racial then
+        self.PixelBorders.racial:Hide()
     end
 	self:UpdateRacial()
 end
