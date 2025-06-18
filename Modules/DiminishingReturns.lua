@@ -35,7 +35,7 @@ local drList
 -- Blizzard has dynamic diminishing timer for reset DR's (usually 15 to 20 seconds)
 -- 20 seconds it's safe value but you can set lower
 -- YOU CAN CHANGE THIS IN GUI -> /sarena -> Global Settings -> DR -> DR Reset Time
-local drTime = 20
+local drTime = 20 -- ^^^^^^^^^^^^
 local severityColor = {
 	[1] = { 0, 1, 0, 1 },
 	[2] = { 1, 1, 0, 1 },
@@ -105,6 +105,19 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
 	if frame.severity > 3 then
 		frame.severity = 3
 	end
+    local drText = frame.DRTextFrame.DRText
+    if drText then
+        if frame.severity == 1 then
+            drText:SetText("½")
+            drText:SetTextColor(0, 1, 0) -- green
+        elseif frame.severity == 2 then
+            drText:SetText("¼")
+            drText:SetTextColor(1, 0.6, 0) -- orange
+        else
+            drText:SetText("%")
+            drText:SetTextColor(1, 0, 0) -- red
+        end
+    end
 end
 
 

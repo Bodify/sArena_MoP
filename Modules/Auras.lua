@@ -170,14 +170,18 @@ sArenaMixin.auraList = {
     [49039] = 7, -- Lichborne
     [148467] = 7, -- Deterrence
 
+    [12043]  = 6.6, -- Presence of Mind
+    [132158] = 6.6, -- Natures's Swiftness
+    [16188]  = 6.6, -- Nature's Swiftness
+
     -- Anti-CCs
-    [115018] = 7, -- Desecrated Ground (All CC Immunity)
-    [48707]  = 7, -- Anti-Magic Shell
-    [110570] = 7, -- Anti-Magic Shell (Symbiosis)
-    [137562] = 7, -- Nimble Brew
-    [6940]   = 7, -- Hand of Sacrifice
-    [5384]   = 7, -- Feign Death
-    [34471]  = 7, -- The Beast Within
+    [115018] = 6.5, -- Desecrated Ground (All CC Immunity)
+    [48707]  = 6.5, -- Anti-Magic Shell
+    [110570] = 6.5, -- Anti-Magic Shell (Symbiosis)
+    [137562] = 6.5, -- Nimble Brew
+    [6940]   = 6.5, -- Hand of Sacrifice
+    [5384]   = 6.5, -- Feign Death
+    [34471]  = 6.5, -- The Beast Within
 
     -- Silences
     [25046] = 6, -- Arcane Torrent
@@ -242,15 +246,12 @@ sArenaMixin.auraList = {
     [116844] = 5, -- Ring of Peace (Silence / Disarm)
 
     -- Important Stuff
-    [12043]  = 4.6, -- Presence of Mind
     [116849] = 4.5, -- life Cocoon
     [110575] = 4.5, -- Icebound Fortitude (Druid)
     [48792]  = 4.5, -- Icebound Fortitude
     [122783] = 4.5, -- Diffuse Magic
     [122470] = 4.5, -- Touch of Karma
-    [132158] = 4.5, -- Natures's Swiftness
     --[378081] = 4.5, -- Natures's Swiftness --not mop
-    [16188]  = 4.5, -- Nature's Swiftness
 
     -- Roots
     [339]    = 4, -- Entangling Roots
@@ -321,7 +322,6 @@ sArenaMixin.auraList = {
     [31842]  = 3, -- Divine Favor
     [1044]   = 3, -- Hand of Freedom
     [22812]  = 3, -- Barkskin
-    [50461]  = 3, -- Anti-Magic Zone
     [47484]  = 3, -- Huddle
     [97463]  = 3, -- Rallying Cry
     [86669] = 3, -- Guardian of Ancient Kings
@@ -340,7 +340,9 @@ sArenaMixin.auraList = {
     [120954] = 3, -- Fortifying Brew
     [115176] = 3, -- Zen Meditation
     [81782] = 3,   -- Power Word: Barrier
-    [109964] = 3, -- Spirit Shell (Buff)
+    [109964] = 2.9, -- Spirit Shell (Buff)
+    [102342] = 2.9, -- Ironbark
+    [50461]  = 2.9, -- Anti-Magic Zone
     [29166]  = 2.9, -- Innervate
     [114908] = 2.8, -- Spirit Shell (Absorb Shield)
     [64901] = 2.8, -- Hymn of Hope

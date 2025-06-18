@@ -106,9 +106,7 @@ local function UpdateBlizzVisibility(instanceType)
     if (not C_AddOns.IsAddOnLoaded("Blizzard_ArenaUI")) then return end
 
     if (not blizzFrame) then
-        blizzFrame = CreateFrame("Frame", nil, UIParent)
-        blizzFrame:SetSize(1, 1)
-        blizzFrame:SetPoint("RIGHT", UIParent, "RIGHT", 500, 0)
+        blizzFrame = CreateFrame("Frame")
         blizzFrame:Hide()
     end
 
@@ -538,8 +536,6 @@ end
 function sArenaFrameMixin:OnLoad()
     local unit = "arena" .. self:GetID()
     self.parent = self:GetParent()
-
-    --RegisterUnitWatch(self, false)
 
     self:RegisterEvent("PLAYER_LOGIN")
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -1481,6 +1477,8 @@ function sArenaMixin:Test()
                     if frame.PixelBorder then
                         frame.PixelBorder:SetVertexColor(1, 0, 0, 1)
                     end
+                    drFrame.DRTextFrame.DRText:SetText("%")
+                    drFrame.DRTextFrame.DRText:SetTextColor(1, 0, 0) -- red
                     if drFrame.__MSQ_New_Normal then
                         drFrame.__MSQ_New_Normal:SetDesaturated(true)
                         drFrame.__MSQ_New_Normal:SetVertexColor(1, 0, 0, 1)
@@ -1490,6 +1488,8 @@ function sArenaMixin:Test()
                     if frame.PixelBorder then
                         frame.PixelBorder:SetVertexColor(0, 1, 0, 1)
                     end
+                    drFrame.DRTextFrame.DRText:SetText("½")
+                    drFrame.DRTextFrame.DRText:SetTextColor(0, 1, 0) -- green
                     if drFrame.__MSQ_New_Normal then
                         drFrame.__MSQ_New_Normal:SetDesaturated(true)
                         drFrame.__MSQ_New_Normal:SetVertexColor(0, 1, 0, 1)

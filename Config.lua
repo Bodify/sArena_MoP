@@ -635,6 +635,8 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
         local frame = self["arena" .. i]
         frame:UpdateDRPositions()
 
+        local swipeOff = true
+
         for n = 1, #categories do
             local dr = frame[categories[n]]
 
@@ -647,6 +649,14 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
             local sArenaText = dr.Cooldown.sArenaText
             if sArenaText then
                 sArenaText:SetFont(text.fontFile, db.fontSize, "OUTLINE")
+            end
+
+            if swipeOff then
+                dr.Cooldown:SetDrawSwipe(false)
+                dr.Cooldown:SetDrawEdge(false)
+            else
+                dr.Cooldown:SetDrawSwipe(true)
+                dr.Cooldown:SetDrawEdge(true)
             end
         end
     end
