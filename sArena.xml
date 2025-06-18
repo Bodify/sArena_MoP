@@ -61,7 +61,7 @@
                     </OnHide>
                 </Scripts>
             </Cooldown>
-            <Frame parentKey="DRTextFrame" frameStrata="TOOLTIP" setAllPoints="true">
+            <Frame parentKey="DRTextFrame" frameStrata="HIGH" setAllPoints="true">
                 <Layers>
                     <Layer level="OVERLAY">
                         <FontString parentKey="DRText" inherits="GameFontNormalLarge" justifyH="RIGHT" justifyV="BOTTOM">

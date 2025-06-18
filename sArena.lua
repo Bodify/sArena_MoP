@@ -1258,7 +1258,7 @@ local testPlayers = {
     { template = "AFF_WARLOCK", name = "Chan" },
     { template = "ARMS_WARRIOR", name = "Trillebartom" },
     { template = "DISC_PRIEST", name = "Hydra" },
-    { template = "HOLY_PRIEST", name = "Mehhx" },
+    { template = "HOLY_PRIEST", name = "Mehh" },
     { template = "FROST_MAGE", name = "Raiku (46)" },
     { template = "FROST_MAGE", name = "Samiyam" },
     { template = "FROST_MAGE", name = "Aeghis" },
@@ -1466,9 +1466,25 @@ function sArenaMixin:Test()
         -- DR Frames
         local drsEnabled = #self.drCategories
         if drsEnabled > 0 then
+            local drCategoryOrder = {
+                "Incapacitate",
+                "Stun",
+                "Root",
+                "Fear",
+                "Silence",
+            }
+            local drCategoryTextures = {
+                [1] = 136071,  -- Incap (Poly)
+                [2] = 132298,  -- Stun (Kidney)
+                [3] = 135848,  -- Root (Frost Nova)
+                [4] = 136184,  -- Fear (Psychic Scream)
+                [5] = 458230,  -- Silence
+            }
+
             for n = 1, 5 do
-                local drFrame = frame[self.drCategories[n]]
-                drFrame.Icon:SetTexture(132298)
+                local drFrame = frame[drCategoryOrder[n]]
+                local textureID = drCategoryTextures[n]
+                drFrame.Icon:SetTexture(textureID)
                 drFrame:Show()
                 drFrame.Cooldown:SetCooldown(currTime, n == 1 and 60 or math.random(20, 50))
 

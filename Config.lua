@@ -21,16 +21,16 @@ local growthValues = { "Down", "Up", "Right", "Left" }
 local drCategories = {
     ["Incapacitate"] = "Incapacitate",
     ["Stun"] = "Stun",
+    ["Root"] = "Root",
+    ["Fear"] = "Fear",
+    ["Silence"] = "Silence",
+    ["Disarm"] = "Disarm",
+    ["Disorient"] = "Disorient",
+    ["Horror"] = "Horror",
+    ["Cyclone"] = "Cyclone",
+    ["MindControl"] = "MindControl",
     ["RandomStun"] = "RandomStun",
     ["RandomRoot"] = "RandomRoot",
-    ["Root"] = "Root",
-    ["Disarm"] = "Disarm",
-    ["Fear"] = "Fear",
-    ["Disorient"] = "Disorient",
-    ["Silence"] = "Silence",
-    ["Horror"] = "Horror",
-    ["MindControl"] = "MindControl",
-    ["Cyclone"] = "Cyclone",
     ["Charge"] = "Charge",
 }
 
@@ -537,9 +537,58 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                         },
                     },
                 },
+                drCategorySizing = {
+                    order = 3,
+                    name = "DR Specific Size Adjustment",
+                    type = "group",
+                    inline = true,
+                    args = {},
+                },
             },
         },
     }
+
+    local drCategoryOrder = {
+        Incapacitate = 1,
+        Stun         = 2,
+        Root         = 3,
+        Fear         = 4,
+        Silence      = 5,
+        Disarm       = 6,
+        Disorient    = 7,
+        Horror       = 8,
+        Cyclone      = 9,
+        MindControl  = 10,
+        RandomStun   = 11,
+        RandomRoot   = 12,
+        Charge       = 13,
+    }
+
+    for categoryKey, categoryName in pairs(drCategories) do
+        optionsTable.dr.args.drCategorySizing.args[categoryKey] = {
+            order = drCategoryOrder[categoryKey],
+            name = categoryName,
+            type = "range",
+            min = -25,
+            max = 25,
+            softMin = -10,
+            softMax = 20,
+            step = 1,
+            get = function(info)
+                local dr = info.handler.db.profile.layoutSettings[layoutName].dr
+                dr.drCategorySizeOffsets = dr.drCategorySizeOffsets or {}
+                return dr.drCategorySizeOffsets[info[#info]] or 0
+            end,
+            set = function(info, val)
+                local dr = info.handler.db.profile.layoutSettings[layoutName].dr
+                dr.drCategorySizeOffsets = dr.drCategorySizeOffsets or {}
+                dr.drCategorySizeOffsets[info[#info]] = val
+                self:UpdateDRSettings(dr, info)
+            end,
+        }
+    end
+
+
 
     return optionsTable
 end
@@ -600,18 +649,6 @@ end
 
 function sArenaMixin:UpdateDRSettings(db, info, val)
     local categories = {
-        -- "Stun",
-        -- "KidneyShot",
-        -- "Incapacitate",
-        -- "Fear",
-        -- "Horror",
-        -- "Charm",
-        -- "Disorient",
-        -- "Disarm",
-        -- "DisorientSmall",
-        -- "Root",
-        -- "OpenerStun",
-
         "Incapacitate",
         "Stun",
         "RandomStun",
@@ -631,16 +668,20 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
         db[info[#info]] = val
     end
 
+    local categorySizeOffsets = db.drCategorySizeOffsets or {}
+
     for i = 1, 5 do
         local frame = self["arena" .. i]
         frame:UpdateDRPositions()
 
-        local swipeOff = true
-
         for n = 1, #categories do
-            local dr = frame[categories[n]]
+            local category = categories[n]
+            local dr = frame[category]
 
-            dr:SetSize(db.size, db.size)
+            local offset = categorySizeOffsets[category] or 0
+            local size = db.size + offset
+
+            dr:SetSize(size, size)
             dr.Border:SetPoint("TOPLEFT", dr, "TOPLEFT", -db.borderSize or 1, db.borderSize or 1)
             dr.Border:SetPoint("BOTTOMRIGHT", dr, "BOTTOMRIGHT", db.borderSize or 1, -db.borderSize or 1)
 
@@ -650,13 +691,51 @@ function sArenaMixin:UpdateDRSettings(db, info, val)
             if sArenaText then
                 sArenaText:SetFont(text.fontFile, db.fontSize, "OUTLINE")
             end
+        end
+    end
 
-            if swipeOff then
+    self:UpdateGlobalDRSettings()
+end
+
+function sArenaMixin:UpdateGlobalDRSettings()
+    local categories = {
+        "Incapacitate",
+        "Stun",
+        "RandomStun",
+        "RandomRoot",
+        "Root",
+        "Disarm",
+        "Fear",
+        "Disorient",
+        "Silence",
+        "Horror",
+        "MindControl",
+        "Cyclone",
+        "Charge",
+    }
+
+    local drSwipeOff = self.db.profile.drSwipeOff
+    local drTextOn = self.db.profile.drTextOn
+
+    for i = 1, 5 do
+        local frame = self["arena" .. i]
+        frame:UpdateDRPositions()
+
+        for n = 1, #categories do
+            local category = categories[n]
+            local dr = frame[category]
+            if drSwipeOff then
                 dr.Cooldown:SetDrawSwipe(false)
                 dr.Cooldown:SetDrawEdge(false)
             else
                 dr.Cooldown:SetDrawSwipe(true)
                 dr.Cooldown:SetDrawEdge(true)
+            end
+
+            if drTextOn then
+                dr.DRTextFrame:Show()
+            else
+                dr.DRTextFrame:Hide()
             end
         end
     end
@@ -978,19 +1057,6 @@ else
                                             info.handler:Test()
                                         end
                                     },
-                                    disableDRBorder = {
-                                        order = 2,
-                                        name = "Disable Default DR Border",
-                                        desc = "Disable the default DR Border so you can use Masque instead.",
-                                        type = "toggle",
-                                        width = "full",
-                                        get = function(info) return info.handler.db.profile.disableDRBorder end,
-                                        set = function(info, val)
-                                            info.handler.db.profile.disableDRBorder = val
-                                            info.handler:SetDRBorderShownStatus()
-                                            info.handler:Test()
-                                        end
-                                    },
                                 },
                             },
                         },
@@ -1023,10 +1089,22 @@ else
                                             info.handler:UpdateDRTimeSetting()
                                         end,
                                     },
-                                    invertDRCooldown = {
+                                    showDecimalsDR = {
                                         order = 2,
-                                        name = "Invert DR Cooldown",
-                                        desc = "Reverses the DR cooldown spiral direction.",
+                                        name = "Show Decimals on DR's",
+                                        desc = "Show Decimals on DR's when duration is below 6 seconds.\n\nOnly for non-OmniCC users.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.showDecimalsDR end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.showDecimalsDR = val
+                                            info.handler:SetupCustomCD()
+                                        end
+                                    },
+                                    invertDRCooldown = {
+                                        order = 3,
+                                        name = "Reverse Swipe Animation",
+                                        desc = "Reverses the DR cooldown swipe direction.",
                                         type = "toggle",
                                         width = "full",
                                         get = function(info) return info.handler.db.profile.invertDRCooldown end,
@@ -1037,16 +1115,44 @@ else
                                             end
                                         end
                                     },
-                                    showDecimalsDR = {
-                                        order = 3,
-                                        name = "Show Decimals on DR's",
-                                        desc = "Show Decimals on DR's when duration is below 6 seconds.\n\nOnly for non-OmniCC users.",
+                                    drSwipeOff = {
+                                        order = 4,
+                                        name = "Disable Swipe Animation",
+                                        desc = "Disables the spiral cooldown swipe on DR icons.",
                                         type = "toggle",
                                         width = "full",
-                                        get = function(info) return info.handler.db.profile.showDecimalsDR end,
+                                        get = function(info)
+                                            return info.handler.db.profile.drSwipeOff
+                                        end,
                                         set = function(info, val)
-                                            info.handler.db.profile.showDecimalsDR = val
-                                            info.handler:SetupCustomCD()
+                                            info.handler.db.profile.drSwipeOff = val
+                                            info.handler:UpdateGlobalDRSettings()
+                                        end,
+                                    },
+                                    drTextOn = {
+                                        order = 5,
+                                        name = "Show DR Text",
+                                        desc = "Show text on DR icons displaying the current DR status.",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info)
+                                            return info.handler.db.profile.drTextOn
+                                        end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.drTextOn = val
+                                            info.handler:UpdateGlobalDRSettings()
+                                        end,
+                                    },
+                                    disableDRBorder = {
+                                        order = 6,
+                                        name = "Disable DR Border",
+                                        type = "toggle",
+                                        width = "full",
+                                        get = function(info) return info.handler.db.profile.disableDRBorder end,
+                                        set = function(info, val)
+                                            info.handler.db.profile.disableDRBorder = val
+                                            info.handler:SetDRBorderShownStatus()
+                                            info.handler:Test()
                                         end
                                     },
                                 },

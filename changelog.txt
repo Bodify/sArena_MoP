@@ -1,3 +1,9 @@
+1.1.6
+- New individual DR size adjustment settings (Layout)
+- New DR Text setting
+- New Hide DR Swipe Animation setting
+- Minor aura tweaks
+
 1.1.5
 - Add new layout "Pixelated".
 - Add "Swap Trinket with Race for Human" setting.
