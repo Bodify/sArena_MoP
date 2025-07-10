@@ -1,3 +1,6 @@
+1.1.7
+- Added castbar icon position settings and "hide shield texture" setting. (Layout Settings -> Cast Bar)
+
 1.1.6
 - New individual DR size adjustment settings (Layout)
 - New DR Text setting

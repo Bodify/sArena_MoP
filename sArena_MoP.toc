@@ -1,9 +1,9 @@
 ## Interface: 50500
 ## Title: sArena |cff00ff96MoP Classic|r|A:raceicon-pandaren-male:16:16|a
 ## Notes: Enhanced Arena Frames
-## Author: Stako, edits by Aeded, Xaryu & Mageiden
+## Author: Stako, edits by Aeded, Xaryu & Mageiden.
 ## OptionalDeps: sArena
-## Version: 3.6.0
+## Version: 1.1.7
 ## X-Category: PvP/Arena
 ## X-Credits: Tekkub, Starship, Kouri, Kollektiv, Lyn, haste, evl, Zork, jturel, wardz, A3st (delayy), Bodify
 ## SavedVariables: sArena_MoPDB

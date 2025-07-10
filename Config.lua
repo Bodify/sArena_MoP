@@ -427,6 +427,50 @@ function sArenaMixin:GetLayoutOptionsTable(layoutName)
                         },
                     },
                 },
+                iconSettings = {
+                    order = 3,
+                    name = "Icon Settings",
+                    type = "group",
+                    inline = true,
+                    args = {
+                        iconPosX = {
+                            order = 1,
+                            name = "Horizontal",
+                            type = "range",
+                            min = -500,
+                            max = 500,
+                            softMin = -200,
+                            softMax = 200,
+                            step = 0.1,
+                            bigStep = 1,
+                        },
+                        iconPosY = {
+                            order = 2,
+                            name = "Vertical",
+                            type = "range",
+                            min = -500,
+                            max = 500,
+                            softMin = -200,
+                            softMax = 200,
+                            step = 0.1,
+                            bigStep = 1,
+                        },
+                        hideBorderShield = {
+                            order = 3,
+                            name = "Hide Shield on Un-Interruptible",
+                            desc = "Hides the shield texture around spell icon on un-interruptible casts.",
+                            width = "full",
+                            type = "toggle",
+                            get = function(info)
+                                return info.handler.db.profile.layoutSettings[layoutName].castBar.hideBorderShield
+                            end,
+                            set = function(info, val)
+                                info.handler.db.profile.layoutSettings[layoutName].castBar.hideBorderShield = val
+                                self:UpdateCastBarSettings(info.handler.db.profile.layoutSettings[layoutName].castBar, info, val)
+                            end,
+                        },
+                    },
+                },
             },
         },
         dr = {
@@ -641,6 +685,15 @@ function sArenaMixin:UpdateCastBarSettings(db, info, val)
 
         frame.CastBar:ClearAllPoints()
         frame.CastBar:SetPoint("CENTER", frame, "CENTER", db.posX, db.posY)
+
+        frame.CastBar.Icon:ClearAllPoints()
+        frame.CastBar.Icon:SetPoint("RIGHT", frame.CastBar, "LEFT", -5 + (db.iconPosX or 0), (db.iconPosY or 0))
+        if db.hideBorderShield then
+            frame.CastBar.BorderShield:SetTexture(nil)
+        else
+            frame.CastBar.BorderShield:SetTexture(330124)
+        end
+
         frame.CastBar:SetScale(db.scale)
         frame.CastBar:SetWidth(db.width)
         frame.CastBar.Icon:SetScale(db.iconScale)
