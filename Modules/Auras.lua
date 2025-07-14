@@ -1,17 +1,37 @@
 sArenaMixin.interruptList = {
-	[1766] = 5, 	-- Kick (Rogue)
-	[2139] = 6, 	-- Counterspell (Mage)
-	[6552] = 5, 	-- Pummel (Warrior)
+    [1766] = 5,  -- Kick (Rogue)
+    [2139] = 6,  -- Counterspell (Mage)
+    [6552] = 5,  -- Pummel (Warrior)
+    [132409] = 6, -- Spell Lock (Warlock)
+    [19647] = 6, -- Spell Lock (Warlock, pet)
+    [47528] = 4,  -- Mind Freeze (Death Knight)
+    [57994] = 3,  -- Wind Shear (Shaman)
+    [91807] = 2,  -- Shambling Rush (Death Knight)
+    [96231] = 4,  -- Rebuke (Paladin)
+    [93985] = 4,  -- Skull Bash (Druid)
+    [116705] = 4, -- Spear Hand Strike (Monk)
+    [147362] = 3, -- Counter Shot (Hunter)
+    [183752] = 4, -- Disrupt (Demon Hunter)
+    [187707] = 3, -- Muzzle (Hunter)
+    [212619] = 6, -- Call Felhunter (Warlock)
+    [31935] = 4,  -- Avenger's Shield (Paladin)
+    [217824] = 5, -- Shield of Virtue (Protection PvP Talent)
+    [351338] = 5, -- Quell (Evoker)
 	[33871] = 6, 	-- Shield Bash (Warrior)
 	[24259] = 6, 	-- Spell Lock (Warlock)
 	[43523] = 5,	-- Unstable Affliction (Warlock)
 	--[16979] = 4, 	-- Feral Charge (Druid)
-	[26679] = 6, 	-- Deadly Throw (Rogue)
-	[57994] = 3, 	-- Wind Shear (Shaman)
-    [116705] = 4,   -- Spear Hand Strike (Monk)
+	[26679] = 5, 	-- Deadly Throw (Rogue)
+    [119911] = 6, -- Optical Blast (Warlock Observer)
+    [115781] = 6, -- Optical Blast (Warlock Observer)
+    [102060] = 4, -- Disrupting Shout
 
-    [78675] = 6, -- Solar Beam
-    [113286] = 6, -- Solar Beam (Symbiosis)
+    [26090] = 2, -- Pummel (Gorilla)
+    [50479] = 2, -- Nethershock
+
+    [78675] = 5, -- Solar Beam
+    [113286] = 5, -- Solar Beam (Symbiosis)
+    [97547] = 5, -- Solar Beam
 }
 
 sArenaMixin.auraList = {

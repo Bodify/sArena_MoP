@@ -1,3 +1,6 @@
+1.1.8
+- Added some missing interrupts to interrupt list. Thank you to Moonfirebeam for reporting these.
+
 1.1.7
 - Added castbar icon position settings and "hide shield texture" setting. (Layout Settings -> Cast Bar)
 
