@@ -99,24 +99,37 @@ local emptyLayoutOptionsTable = {
     }
 }
 local blizzFrame
+local changedParent
 
 local function UpdateBlizzVisibility(instanceType)
     -- Hide Blizzard Arena Frames while in Arena
-    if (InCombatLockdown()) then return end
-    if (not C_AddOns.IsAddOnLoaded("Blizzard_ArenaUI")) then return end
+    if InCombatLockdown() then return end
+    local prepFrame = _G["ArenaPrepFrames"]
+    local enemyFrame = _G["ArenaEnemyFrames"]
 
     if (not blizzFrame) then
         blizzFrame = CreateFrame("Frame")
         blizzFrame:Hide()
     end
 
-    local prepFrame = _G["ArenaPrepFrames"]
-    local enemyFrame = _G["ArenaEnemyFrames"]
-    if prepFrame then
-        prepFrame:SetParent(blizzFrame)
-    end
-    if enemyFrame then
-        enemyFrame:SetParent(blizzFrame)
+    if instanceType == "arena" then
+        if prepFrame then
+            prepFrame:SetParent(ArenaAntiMalware)
+            changedParent = true
+        end
+        if enemyFrame then
+            enemyFrame:SetParent(ArenaAntiMalware)
+            changedParent = true
+        end
+    else
+        if changedParent then
+            if prepFrame then
+                prepFrame:SetParent(UIParent)
+            end
+            if enemyFrame then
+                enemyFrame:SetParent(UIParent)
+            end
+        end
     end
 end
 
