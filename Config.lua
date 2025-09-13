@@ -50,6 +50,22 @@ local racialCategories = {
     ["Pandaren"] = "Pandaren",
 }
 
+local drIcons = {
+	["Incapacitate"] = 136071,
+	["Stun"] = 132298,
+	["RandomStun"] = 133477,
+	["RandomRoot"] = 135852,
+	["Root"] = 135848,
+	["Disarm"] = 132343,
+	["Fear"] = 136183,
+    ["Disorient"] = 134153,
+	["Silence"] = 458230,
+	["Horror"] = 237568,
+	["MindControl"] = 136206,
+	["Cyclone"] = 136022,
+	["Charge"] = 132337,
+}
+
 function sArenaMixin:GetLayoutOptionsTable(layoutName)
     local optionsTable = {
         arenaFrames = {
@@ -842,6 +858,61 @@ function sArenaMixin:UpdateRacialSettings(db, info, val)
     end
 end
 
+local function setDRIcons()
+    local inputs = {
+        drIconsTitle = {
+            order = 1,
+            type = "description",
+            name = "Configure DR Icons",
+            fontSize = "medium",
+        }
+    }
+
+    local order = 2
+
+    for category, defaultIcon in pairs(drIcons) do
+        inputs[category] = {
+            order = order,
+            name = function(info)
+                local dbIcons = info.handler.db.profile.drIcons or {}
+                local icon = dbIcons[category] or defaultIcon
+                local textureString = ""
+
+                if type(icon) == "number" then
+                    textureString = "|T" .. icon .. ":24:24:0:0:64:64:5:59:5:59|t "
+                elseif type(icon) == "string" then
+                    textureString = "|T" .. icon .. ":24|t "
+                end
+
+                return textureString .. category .. ":"
+            end,
+            desc = "Default icon: " .. defaultIcon .. " |T" .. defaultIcon .. ":24|t",
+            type = "input",
+            width = "full",
+            get = function(info)
+                local dbIcons = info.handler.db.profile.drIcons or {}
+                return tostring(dbIcons[category] or "")
+            end,
+            set = function(info, value)
+                local db = info.handler.db
+                db.profile.drIcons = db.profile.drIcons or {}
+
+                -- Save number if possible, else string
+                local num = tonumber(value)
+                db.profile.drIcons[category] = num or value
+
+                LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+            end,
+        }
+
+        order = order + 1
+    end
+
+    return inputs
+end
+
+
+
 if C_AddOns.IsAddOnLoaded("sArena") then
     sArenaMixin.optionsTable = {
         type = "group",
@@ -1218,6 +1289,35 @@ else
                                 set = function(info, key, val) info.handler.db.profile.drCategories[key] = val end,
                                 values = drCategories,
                             },
+                            dynamicIcons = {
+                                order = 3,
+                                name = "Static Icons",
+                                desc = "DR icons will always use a specific icon for each DR category.",
+                                type = "toggle",
+                                get = function(info) return info.handler.db.profile.drStaticIcons end,
+                                set = function(info, val)
+                                    info.handler.db.profile.drStaticIcons = val
+                                    LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+                                end,
+                            },
+                            drIconsSection = {
+                                order = 4,
+                                type = "group",
+                                name = "DR Icons Settings",
+                                inline = true,
+                                disabled = function(info) return not info.handler.db.profile.drStaticIcons end,
+                                get = function(info)
+                                    local key = info[#info]
+                                    return tostring(info.handler.db.profile.drIcons[key] or drIcons[key])
+                                end,
+                                set = function(info, value)
+                                    local key = info[#info]
+                                    local num = tonumber(value)
+                                    info.handler.db.profile.drIcons[key] = num or value
+                                    LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+                                end,
+                                args = setDRIcons(),
+                            },
                         },
                     },
                     racialGroup = {
@@ -1277,6 +1377,80 @@ else
                     },
                 },
             },
+            shareProfile = {
+                order = 8,
+                name = "Share Profile",
+                desc = "Export or import a sArena profile",
+                type = "group",
+                args = {
+                    exportHeader = {
+                        order = 0,
+                        type = "description",
+                        name = "|cffffff00Export Profile:|r",
+                        fontSize = "large",
+                    },
+                    exportButton = {
+                        order = 1,
+                        name = "Export Current Profile",
+                        type = "execute",
+                        func = function(info)
+                            local exportString, err = sArenaMixin:ExportProfile()
+                            if not err then
+                                sArenaMixin.exportString = exportString
+                                sArenaMixin.importInputText = ""
+                                LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+                            else
+                                print("Export failed:", err)
+                            end
+                        end,
+                        width = "normal",
+                    },
+                    exportText = {
+                        order = 2,
+                        name = "Export String",
+                        type = "input",
+                        desc = "|cff32f795Ctrl+A|r to select all, |cff32f795Ctrl+C|r to copy",
+                        width = "full",
+                        multiline = 5,
+                        get = function()
+                            return sArenaMixin.exportString or ""
+                        end,
+                        set = function() end, -- make it read-only
+                    },
+                    spacer = {
+                        order = 3,
+                        type = "description",
+                        name = " ",
+                    },
+                    importHeader = {
+                        order = 4,
+                        type = "description",
+                        name = "|cffffff00Import Profile:|r",
+                        fontSize = "large",
+                    },
+                    importInput = {
+                        order = 5,
+                        name = "Paste Profile String",
+                        desc = "|cff32f795Ctrl+V|r to paste copied profile string",
+                        type = "input",
+                        width = "full",
+                        multiline = 5,
+                        get = function()
+                            return sArenaMixin.importInputText or ""
+                        end,
+                        set = function(info, val)
+                            sArenaMixin.importInputText = val
+                            local str = sArenaMixin.importInputText
+                            local success, err = sArenaMixin:ImportProfile(str)
+                            if not success then
+                                print("|cffff4040Import failed:|r", err)
+                            else
+                                sArena_MoPDB.reOpenOptions = true
+                            end
+                        end,
+                    },
+                },
+            }
         },
     }
 end

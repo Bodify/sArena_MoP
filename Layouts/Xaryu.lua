@@ -136,6 +136,13 @@ local function setupOptionsTable(self)
                 get = getSetting,
                 set = setSetting,
             },
+            cropIcons = {
+                order = 4,
+                name = "Crop Icons",
+                type = "toggle",
+                get = getSetting,
+                set = setSetting,
+            },
         }
     }
 end

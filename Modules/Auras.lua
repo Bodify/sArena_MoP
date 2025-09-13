@@ -431,6 +431,7 @@ sArenaMixin.auraList = {
     [113656] = 0.8, -- Fists of Fury
     [83853] = 0.8, -- Combustion (Debuff)
     [77616] = 0.7, -- Dark Simulacrum (Buff, has spell)
+    [44544] = 0.6, -- Fingers of Frost
     [41635] = 0.5, -- Prayer of Mending
     [64844] = 0.5, -- Divine Hymn
     [116841] = 0.5, -- Tiger's Lust (70% speed)

@@ -114,11 +114,11 @@ local function UpdateBlizzVisibility(instanceType)
 
     if instanceType == "arena" then
         if prepFrame then
-            prepFrame:SetParent(ArenaAntiMalware)
+            prepFrame:SetParent(blizzFrame)
             changedParent = true
         end
         if enemyFrame then
-            enemyFrame:SetParent(ArenaAntiMalware)
+            enemyFrame:SetParent(blizzFrame)
             changedParent = true
         end
     else
@@ -467,7 +467,7 @@ function sArenaMixin:SetLayout(_, layout)
 
     self.optionsTable.args.layoutSettingsGroup.args = self.layouts[layout].optionsTable and
         self.layouts[layout].optionsTable or emptyLayoutOptionsTable
-    LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena_MoP")
 
     local _, instanceType = IsInInstance()
     if (instanceType ~= "arena" and self.arena1:IsShown()) then
@@ -511,7 +511,7 @@ function sArenaMixin:SetupDrag(frameToClick, frameToMove, settingsTable, updateM
 
             settings.posX, settings.posY = frameX, frameY
             self[updateMethod](self, settings)
-            LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena")
+            LibStub("AceConfigRegistry-3.0"):NotifyChange("sArena_MoP")
         end
     end)
 end
@@ -638,6 +638,9 @@ function sArenaFrameMixin:OnEvent(event, eventUnit, arg1, arg2)
 
         self:Initialize()
     elseif (event == "PLAYER_ENTERING_WORLD") or (event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS") then
+        if TestTitle then
+            TestTitle:Hide()
+        end
         self.Name:SetText("")
         self.CastBar:Hide()
         self.specTexture = nil
@@ -1352,7 +1355,7 @@ function sArenaMixin:Test()
         ExpandTemplates()
     end
     local shuffledPlayers = Shuffle()
-    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
+    local cropIcons = db.profile.layoutSettings[db.profile.currentLayout].cropIcons
     local replaceClassIcon = db.profile.layoutSettings[db.profile.currentLayout].replaceClassIcon
     local hideClassIcon = db.profile.hideClassIcon
     local colorTrinket = db.profile.colorTrinket

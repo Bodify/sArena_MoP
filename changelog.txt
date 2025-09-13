@@ -1,3 +1,15 @@
+1.2.1
+- Fix typo in hiding default arena frames
+- Fix Color Trinket setting sometimes going gray instead of its intended red color.
+
+1.2.0
+- Added Import/Export profile sharing system. Shares active profile.
+- Added "Static DR Icons" setting to set specicifc icons for specific DRs instead of the dynamic ones.
+- Added "Crop Icons" to Xaryu Layout.
+- Fixed DR Text setting showing +1 DR
+- Fixed crop icons test mode not working 100%
+- Fix "Hide" after testing not hiding the Title+Drag Info text above frames
+
 1.1.9
 - Fixed some interrupt durations.
 

@@ -80,7 +80,11 @@ function sArenaFrameMixin:FindRacial(event, spellID)
 
 		if (sharedCD and remainingCD < sharedCD) then
 			self.Trinket.Cooldown:SetCooldown(currTime, sharedCD)
-            self.Trinket.Texture:SetDesaturated(true)
+			if self.parent.db.profile.colorTrinket then
+				self.Trinket.Texture:SetColorTexture(1,0,0)
+			else
+            	self.Trinket.Texture:SetDesaturated(true)
+			end
 		end
 	elseif ((spellID == 42292) and self.Racial.Texture:GetTexture()) then
 		local remainingCD = GetRemainingCD(self.Racial.Cooldown)

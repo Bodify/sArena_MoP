@@ -27,7 +27,7 @@ sArenaMixin.defaultSettings.profile.drCategories = {
 	["Horror"] = true,
 	["MindControl"] = true,
 	["Cyclone"] = true,
-	["Charge"] = true,
+	["Charge"] = false,
 }
 
 local drCategories = sArenaMixin.drCategories
@@ -41,7 +41,21 @@ local severityColor = {
 	[2] = { 1, 1, 0, 1 },
 	[3] = { 1, 0, 0, 1 }
 }
-
+sArenaMixin.defaultSettings.profile.drIcons = {
+	["Incapacitate"] = 136071,
+	["Stun"] = 132298,
+	["RandomStun"] = 133477,
+	["RandomRoot"] = 135852,
+	["Root"] = 135848,
+	["Disarm"] = 132343,
+	["Fear"] = 136183,
+    ["Disorient"] = 134153,
+	["Silence"] = 458230,
+	["Horror"] = 237568,
+	["MindControl"] = 136206,
+	["Cyclone"] = 136022,
+	["Charge"] = 132337,
+}
 local GetTime = GetTime
 
 function sArenaMixin:UpdateDRTimeSetting()
@@ -91,7 +105,7 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
 		end
 	end
 
-	frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)))
+	frame.Icon:SetTexture(self.parent.db.profile.drStaticIcons and self.parent.db.profile.drIcons[category] or GetSpellTexture(spellID))
 	frame.Border:SetVertexColor(unpack(severityColor[frame.severity]))
     if frame.PixelBorder then
         frame.PixelBorder:SetVertexColor(unpack(severityColor[frame.severity]))
@@ -100,24 +114,22 @@ function sArenaFrameMixin:FindDR(combatEvent, spellID)
         frame.__MSQ_New_Normal:SetDesaturated(true)
         frame.__MSQ_New_Normal:SetVertexColor(unpack(severityColor[frame.severity]))
     end
+	local drText = frame.DRTextFrame.DRText
+	if drText then
+		if frame.severity == 1 then
+			drText:SetText("½")
+		elseif frame.severity == 2 then
+			drText:SetText("¼")
+		else
+			drText:SetText("%")
+		end
+		drText:SetTextColor(unpack(severityColor[frame.severity]))
+	end
 
 	frame.severity = frame.severity + 1
 	if frame.severity > 3 then
 		frame.severity = 3
 	end
-    local drText = frame.DRTextFrame.DRText
-    if drText then
-        if frame.severity == 1 then
-            drText:SetText("½")
-            drText:SetTextColor(0, 1, 0) -- green
-        elseif frame.severity == 2 then
-            drText:SetText("¼")
-            drText:SetTextColor(1, 0.6, 0) -- orange
-        else
-            drText:SetText("%")
-            drText:SetTextColor(1, 0, 0) -- red
-        end
-    end
 end
 
 
